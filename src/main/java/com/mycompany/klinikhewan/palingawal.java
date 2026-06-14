@@ -38,15 +38,16 @@ public class palingawal extends javax.swing.JFrame {
         jLabel1.setFont(new java.awt.Font("Bookman Old Style", 1, 24)); // NOI18N
         jLabel1.setText("Sebelumnya pernah menggunakan pelayanan dari");
 
-        jButton1.setFont(new java.awt.Font("Bookman Old Style", 1, 24)); // NOI18N
+        jButton1.setFont(new java.awt.Font("Bookman Old Style", 0, 14)); // NOI18N
         jButton1.setText("Sudah");
         jButton1.addActionListener(this::jButton1ActionPerformed);
 
         jLabel2.setFont(new java.awt.Font("Bookman Old Style", 1, 24)); // NOI18N
         jLabel2.setText("Klinik Hewan PT. Kurnia Daya Sejahtera ini?");
 
-        jButton2.setFont(new java.awt.Font("Bookman Old Style", 1, 24)); // NOI18N
+        jButton2.setFont(new java.awt.Font("Bookman Old Style", 0, 14)); // NOI18N
         jButton2.setText("Belum");
+        jButton2.addActionListener(this::jButton2ActionPerformed);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -57,13 +58,16 @@ public class palingawal extends javax.swing.JFrame {
                 .addComponent(jLabel1)
                 .addContainerGap(93, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jLabel2))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(278, 278, 278)
                         .addComponent(jButton1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButton2))
-                    .addComponent(jLabel2))
+                        .addGap(97, 97, 97)
+                        .addComponent(jButton2)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addGap(118, 118, 118))
         );
         layout.setVerticalGroup(
@@ -77,7 +81,7 @@ public class palingawal extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton1)
                     .addComponent(jButton2))
-                .addContainerGap(113, Short.MAX_VALUE))
+                .addContainerGap(124, Short.MAX_VALUE))
         );
 
         pack();
@@ -86,6 +90,12 @@ public class palingawal extends javax.swing.JFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        FormLogin FL = new FormLogin();
+         FL.setVisible(true);
+         this.dispose();
+    }//GEN-LAST:event_jButton2ActionPerformed
 
     /**
      * @param args the command line arguments
