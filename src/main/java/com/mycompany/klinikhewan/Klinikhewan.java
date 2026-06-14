@@ -11,6 +11,6 @@ package com.mycompany.klinikhewan;
 public class Klinikhewan {
 
     public static void main(String[] args) {
-        System.out.println("Hello World!");
+        new FormLogin().setVisible(true);
     }
 }
