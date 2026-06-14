@@ -11,6 +11,6 @@ package com.mycompany.klinikhewan;
 public class Klinikhewan {
 
     public static void main(String[] args) {
-        new FormLogin().setVisible(true);
+        new palingawal().setVisible(true);
     }
 }
