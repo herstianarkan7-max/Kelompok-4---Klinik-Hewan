@@ -56,6 +56,7 @@ public class datahewan extends javax.swing.JFrame {
         jButton1.addActionListener(this::jButton1ActionPerformed);
 
         jButton2.setText("Back");
+        jButton2.addActionListener(this::jButton2ActionPerformed);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -159,6 +160,12 @@ public class datahewan extends javax.swing.JFrame {
     private void nama_hewanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nama_hewanActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_nama_hewanActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        FormLogin FL = new FormLogin();
+         FL.setVisible(true);
+         this.dispose();
+    }//GEN-LAST:event_jButton2ActionPerformed
 
     /**
      * @param args the command line arguments
