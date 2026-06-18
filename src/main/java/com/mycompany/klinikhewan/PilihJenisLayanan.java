@@ -32,6 +32,7 @@ public class PilihJenisLayanan extends javax.swing.JFrame {
         jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
+        jButton4 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -47,6 +48,8 @@ public class PilihJenisLayanan extends javax.swing.JFrame {
         jLabel1.setFont(new java.awt.Font("Bookman Old Style", 1, 24)); // NOI18N
         jLabel1.setText("PILIH JENIS LAYANAN");
 
+        jButton4.setText("Back");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -55,27 +58,32 @@ public class PilihJenisLayanan extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(38, 38, 38)
-                        .addComponent(jButton1)
-                        .addGap(32, 32, 32)
-                        .addComponent(jButton2)
-                        .addGap(32, 32, 32)
-                        .addComponent(jButton3))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jButton4)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jButton1)
+                                .addGap(32, 32, 32)
+                                .addComponent(jButton2)
+                                .addGap(32, 32, 32)
+                                .addComponent(jButton3))))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(66, 66, 66)
+                        .addGap(91, 91, 91)
                         .addComponent(jLabel1)))
                 .addContainerGap(65, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(64, 64, 64)
-                .addComponent(jLabel1)
                 .addGap(57, 57, 57)
+                .addComponent(jLabel1)
+                .addGap(64, 64, 64)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton1)
                     .addComponent(jButton2)
                     .addComponent(jButton3))
-                .addContainerGap(140, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 76, Short.MAX_VALUE)
+                .addComponent(jButton4)
+                .addGap(37, 37, 37))
         );
 
         pack();
@@ -132,6 +140,7 @@ public class PilihJenisLayanan extends javax.swing.JFrame {
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
+    private javax.swing.JButton jButton4;
     private javax.swing.JLabel jLabel1;
     // End of variables declaration//GEN-END:variables
 }
