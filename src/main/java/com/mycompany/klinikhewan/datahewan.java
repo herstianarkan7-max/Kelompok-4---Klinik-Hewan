@@ -112,33 +112,23 @@ public class datahewan extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
          try {
-    // 1. Memanggil koneksi database yang sudah kita buat sebelumnya
+   
     Connection conn = testkoneksi.getKoneksi();
     
-    // 2. Menuliskan perintah SQL (Sesuaikan 'hewan' dengan nama tabelmu di phpMyAdmin)
-    // Sesuaikan juga nama-nama kolom di dalam kurung dengan yang ada di database
     String sql = "INSERT INTO tb_hewan (id_pemilik, nama_hewan, jenis_hewan, umur_hewan) VALUES (?, ?, ?, ?)";
     
-    // 3. Menyiapkan jembatan untuk memasukkan data
     PreparedStatement pst = conn.prepareStatement(sql);
     pst.setInt(1, idPemilikBaru);
     pst.setString(2, nama_hewan.getText()); // Mengisi Nama Hewan
     pst.setString(3, jenis_hewan.getText()); // Mengisi Jenis Hewan
     pst.setString(4, umur_hewan.getText()); // Mengisi Umur Hewan
     
-    // 5. Menjalankan perintah untuk menyimpan ke database
     pst.executeUpdate();
     
-    // 6. Memunculkan notifikasi sukses
     JOptionPane.showMessageDialog(null, "Data Hewan Berhasil Disimpan!");
     
-    // 7. (Opsional) Pindah ke form selanjutnya (misal: PilihJenisLayanan)
-    // PilihJenisLayanan pjl = new PilihJenisLayanan();
-    // pjl.setVisible(true);
-    // this.dispose(); // Menutup form Data Hewan
-    
 } catch (Exception e) {
-    // Memunculkan pesan error jika ada yang salah
+  
     JOptionPane.showMessageDialog(null, "Penyimpanan Gagal: " + e.getMessage());
 }
         PilihJenisLayanan PilihJenisLayanan = new
