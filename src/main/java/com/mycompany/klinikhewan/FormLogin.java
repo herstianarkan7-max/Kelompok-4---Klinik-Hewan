@@ -139,24 +139,19 @@ public class FormLogin extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         try {
-    // 1. Memanggil koneksi database
+
     Connection conn = testkoneksi.getKoneksi();
     
-    // 2. Perintah memasukkan data ke tabel
-    // Pastikan ejaan nama kolom (nama, nik, no_hp, dll) sama persis dengan di phpMyAdmin
     String sql = "INSERT INTO tb_pemilik (nama, NIK, no_hp, email, Alamat) VALUES (?, ?, ?, ?, ?)";
     
     PreparedStatement pst = conn.prepareStatement(sql, java.sql.Statement.RETURN_GENERATED_KEYS);
     
-    // 3. Menangkap teks dari form
-    // PENTING: Sesuaikan jTextField1, 2, dst dengan nama variabel kotak teks di desainmu!
-    pst.setString(1, nama.getText()); // Menangkap isian Nama
-    pst.setString(2, NIK.getText()); // Menangkap isian NIK
-    pst.setString(3, no_hp.getText()); // Menangkap isian No. HP
-    pst.setString(4, email.getText()); // Menangkap isian Email
-    pst.setString(5, Alamat.getText()); // Menangkap isian Alamat
+    pst.setString(1, nama.getText());
+    pst.setString(2, NIK.getText());
+    pst.setString(3, no_hp.getText());
+    pst.setString(4, email.getText());
+    pst.setString(5, Alamat.getText());
     
-    // 4. Mengeksekusi penyimpanan ke database
     pst.executeUpdate();
     
     java.sql.ResultSet rs = pst.getGeneratedKeys();
@@ -164,7 +159,7 @@ public class FormLogin extends javax.swing.JFrame {
     if (rs.next()) {
         idTerbaru = rs.getInt(1);
     }
-    // 5. Menampilkan pesan sukses
+
     JOptionPane.showMessageDialog(null, "Data Berhasil Disimpan!");
     
     datahewan datahewan = new datahewan();
