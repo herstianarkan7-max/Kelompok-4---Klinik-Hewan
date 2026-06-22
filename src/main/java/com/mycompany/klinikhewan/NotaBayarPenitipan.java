@@ -3,7 +3,9 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package com.mycompany.klinikhewan;
-
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import javax.swing.JOptionPane;
 /**
  *
  * @author Nafisah
@@ -11,7 +13,53 @@ package com.mycompany.klinikhewan;
 public class NotaBayarPenitipan extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(NotaBayarPenitipan.class.getName());
+    
+    int idPenitipanMasuk;
 
+public void tangkapIdPenitipan(int id) {
+    this.idPenitipanMasuk = id;
+    muatDataNotaAkhir();
+}
+
+public void muatDataNotaAkhir() {
+    try {
+        java.sql.Connection conn = testkoneksi.getKoneksi();
+        String sql = "SELECT p.nama, h.nama_hewan, pt.tanggal_masuk, pt.tanggal_keluar, pt.nomor_kandang " +
+                     "FROM tb_penitipan pt " +
+                     "JOIN tb_hewan h ON pt.id_hewan = h.id_hewan " +
+                     "JOIN tb_pemilik p ON h.id_pemilik = p.id_pemilik " +
+                     "WHERE pt.id_penitipan = ?";
+        java.sql.PreparedStatement pst = conn.prepareStatement(sql);
+        pst.setInt(1, idPenitipanMasuk);
+        java.sql.ResultSet rs = pst.executeQuery();
+        
+        if (rs.next()) {
+            txtPelanggan.setText(rs.getString("nama"));
+            txtNamaHewan.setText(rs.getString("nama_hewan"));
+            txtJenisLayanan.setText(rs.getString("tanggal_masuk"));
+            txtTanggalKeluar.setText(rs.getString("tanggal_keluar"));
+            txtJenisLayanan.setText("Penitipan Kandang: " + rs.getString("nomor_kandang"));
+            
+            // LOGIKA HITUNG SELISIH HARI OTOMATIS
+            java.sql.Date tglMasuk = rs.getDate("tanggal_masuk");
+            java.sql.Date tglKeluar = rs.getDate("tanggal_keluar");
+            
+            long selisihMilidetik = Math.abs(tglKeluar.getTime() - tglMasuk.getTime());
+            long jumlahHari = java.util.concurrent.TimeUnit.DAYS.convert(selisihMilidetik, java.util.concurrent.TimeUnit.MILLISECONDS);
+            
+            if (jumlahHari == 0) { jumlahHari = 1; } // Jaga-jaga jika keluar di hari yang sama, dihitung 1 hari
+            
+            // Hitung total (Misal tarif kandang per hari Rp 50.000)
+            int tarifPerHari = 50000;
+            int totalBiaya = (int) jumlahHari * tarifPerHari;
+            
+            txtBiayaLayanan.setText(String.valueOf(totalBiaya));
+            txtTotal.setText(String.valueOf(totalBiaya));
+        }
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(null, "Gagal memuat nota akhir: " + e.getMessage());
+    }
+}
     /**
      * Creates new form NotaBayarPenitipan
      */
@@ -31,31 +79,31 @@ public class NotaBayarPenitipan extends javax.swing.JFrame {
         jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
-        jTextField3 = new javax.swing.JTextField();
+        txtPelanggan = new javax.swing.JTextField();
         jLabel10 = new javax.swing.JLabel();
         jLabel12 = new javax.swing.JLabel();
         jLabel13 = new javax.swing.JLabel();
         jLabel14 = new javax.swing.JLabel();
         jLabel15 = new javax.swing.JLabel();
         jLabel16 = new javax.swing.JLabel();
-        jTextField5 = new javax.swing.JTextField();
-        jTextField1 = new javax.swing.JTextField();
+        txtNamaHewan = new javax.swing.JTextField();
+        txtJenisLayanan = new javax.swing.JTextField();
         jLabel17 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jLabel11 = new javax.swing.JLabel();
         jLabel18 = new javax.swing.JLabel();
-        jTextField2 = new javax.swing.JTextField();
+        txtBiayaLayanan = new javax.swing.JTextField();
         jTextField4 = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
         jTextField7 = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
-        jTextField8 = new javax.swing.JTextField();
+        txtTotal = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
         jLabel19 = new javax.swing.JLabel();
         jLabel20 = new javax.swing.JLabel();
-        jTextField6 = new javax.swing.JTextField();
-        jTextField10 = new javax.swing.JTextField();
+        txtTanggalMasuk = new javax.swing.JTextField();
+        txtTanggalKeluar = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -79,9 +127,9 @@ public class NotaBayarPenitipan extends javax.swing.JFrame {
 
         jLabel16.setText("---------------------------------------------------------------");
 
-        jTextField5.addActionListener(this::jTextField5ActionPerformed);
+        txtNamaHewan.addActionListener(this::txtNamaHewanActionPerformed);
 
-        jTextField1.addActionListener(this::jTextField1ActionPerformed);
+        txtJenisLayanan.addActionListener(this::txtJenisLayananActionPerformed);
 
         jLabel17.setText("---------------------------------------------------------------");
 
@@ -93,7 +141,7 @@ public class NotaBayarPenitipan extends javax.swing.JFrame {
 
         jLabel18.setText("---------------------------------------------------------------");
 
-        jTextField2.addActionListener(this::jTextField2ActionPerformed);
+        txtBiayaLayanan.addActionListener(this::txtBiayaLayananActionPerformed);
 
         jTextField4.addActionListener(this::jTextField4ActionPerformed);
 
@@ -105,7 +153,7 @@ public class NotaBayarPenitipan extends javax.swing.JFrame {
         jLabel2.setFont(new java.awt.Font("Bookman Old Style", 0, 12)); // NOI18N
         jLabel2.setText("PT. KURNIA DAYA SEJAHTERA");
 
-        jTextField8.addActionListener(this::jTextField8ActionPerformed);
+        txtTotal.addActionListener(this::txtTotalActionPerformed);
 
         jLabel5.setText("Pelanggan");
 
@@ -113,9 +161,9 @@ public class NotaBayarPenitipan extends javax.swing.JFrame {
 
         jLabel20.setText("Tanggal Keluar");
 
-        jTextField6.addActionListener(this::jTextField6ActionPerformed);
+        txtTanggalMasuk.addActionListener(this::txtTanggalMasukActionPerformed);
 
-        jTextField10.addActionListener(this::jTextField10ActionPerformed);
+        txtTanggalKeluar.addActionListener(this::txtTanggalKeluarActionPerformed);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -124,7 +172,7 @@ public class NotaBayarPenitipan extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGap(91, 91, 91)
                 .addComponent(jLabel1)
-                .addGap(0, 104, Short.MAX_VALUE))
+                .addGap(0, 0, Short.MAX_VALUE))
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
@@ -157,39 +205,40 @@ public class NotaBayarPenitipan extends javax.swing.JFrame {
                                     .addComponent(jLabel7))
                                 .addGap(23, 23, 23)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jTextField3)
-                                    .addComponent(jTextField5)
-                                    .addComponent(jTextField1)))
+                                    .addComponent(txtPelanggan)
+                                    .addComponent(txtNamaHewan)
+                                    .addComponent(txtJenisLayanan)))
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel8)
                                     .addComponent(jLabel3))
                                 .addGap(18, 18, 18)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jTextField8)
-                                    .addComponent(jTextField2)))
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(jLabel17)
-                                .addGroup(layout.createSequentialGroup()
-                                    .addComponent(jLabel4)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGroup(layout.createSequentialGroup()
-                                    .addComponent(jLabel11)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(jTextField7, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addComponent(jLabel18))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel16)
-                                .addGap(0, 0, Short.MAX_VALUE))
+                                    .addComponent(txtTotal)
+                                    .addComponent(txtBiayaLayanan)))
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel19)
                                     .addComponent(jLabel20))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jTextField10)
-                                    .addComponent(jTextField6))))))
+                                    .addComponent(txtTanggalKeluar)
+                                    .addComponent(txtTanggalMasuk)))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                        .addComponent(jLabel17)
+                                        .addGroup(layout.createSequentialGroup()
+                                            .addComponent(jLabel4)
+                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                            .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addGroup(layout.createSequentialGroup()
+                                            .addComponent(jLabel11)
+                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                            .addComponent(jTextField7, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addComponent(jLabel18))
+                                    .addComponent(jLabel16))
+                                .addGap(0, 0, Short.MAX_VALUE)))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -214,33 +263,33 @@ public class NotaBayarPenitipan extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel5)
-                    .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtPelanggan, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel6)
-                    .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtNamaHewan, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel7)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtJenisLayanan, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel19)
-                    .addComponent(jTextField6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtTanggalMasuk, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel20)
-                    .addComponent(jTextField10, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtTanggalKeluar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 9, Short.MAX_VALUE)
                 .addComponent(jLabel17)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel8)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtBiayaLayanan, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jLabel3)
-                    .addComponent(jTextField8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtTotal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.TRAILING)
@@ -257,17 +306,17 @@ public class NotaBayarPenitipan extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jTextField5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField5ActionPerformed
+    private void txtNamaHewanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNamaHewanActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField5ActionPerformed
+    }//GEN-LAST:event_txtNamaHewanActionPerformed
 
-    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
+    private void txtJenisLayananActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtJenisLayananActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField1ActionPerformed
+    }//GEN-LAST:event_txtJenisLayananActionPerformed
 
-    private void jTextField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField2ActionPerformed
+    private void txtBiayaLayananActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtBiayaLayananActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField2ActionPerformed
+    }//GEN-LAST:event_txtBiayaLayananActionPerformed
 
     private void jTextField4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField4ActionPerformed
         // TODO add your handling code here:
@@ -277,17 +326,17 @@ public class NotaBayarPenitipan extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextField7ActionPerformed
 
-    private void jTextField8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField8ActionPerformed
+    private void txtTotalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtTotalActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField8ActionPerformed
+    }//GEN-LAST:event_txtTotalActionPerformed
 
-    private void jTextField6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField6ActionPerformed
+    private void txtTanggalMasukActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtTanggalMasukActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField6ActionPerformed
+    }//GEN-LAST:event_txtTanggalMasukActionPerformed
 
-    private void jTextField10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField10ActionPerformed
+    private void txtTanggalKeluarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtTanggalKeluarActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField10ActionPerformed
+    }//GEN-LAST:event_txtTanggalKeluarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -334,14 +383,14 @@ public class NotaBayarPenitipan extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField10;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
     private javax.swing.JTextField jTextField4;
-    private javax.swing.JTextField jTextField5;
-    private javax.swing.JTextField jTextField6;
     private javax.swing.JTextField jTextField7;
-    private javax.swing.JTextField jTextField8;
+    private javax.swing.JTextField txtBiayaLayanan;
+    private javax.swing.JTextField txtJenisLayanan;
+    private javax.swing.JTextField txtNamaHewan;
+    private javax.swing.JTextField txtPelanggan;
+    private javax.swing.JTextField txtTanggalKeluar;
+    private javax.swing.JTextField txtTanggalMasuk;
+    private javax.swing.JTextField txtTotal;
     // End of variables declaration//GEN-END:variables
 }

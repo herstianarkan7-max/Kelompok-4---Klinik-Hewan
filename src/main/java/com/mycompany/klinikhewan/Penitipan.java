@@ -1,5 +1,7 @@
 package com.mycompany.klinikhewan;
-
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import javax.swing.JOptionPane;
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
@@ -12,7 +14,11 @@ package com.mycompany.klinikhewan;
 public class Penitipan extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(Penitipan.class.getName());
+    int idHewanMasuk;
 
+public void tangkapIdHewan(int id) {
+    this.idHewanMasuk = id;
+}
     /**
      * Creates new form Penitipan
      */
@@ -124,9 +130,41 @@ public class Penitipan extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-       BuktiPenitipan BP = new BuktiPenitipan();
-       BP.setVisible(true);
-       this.dispose();
+       try {
+           java.sql.Connection conn = testkoneksi.getKoneksi();
+           String sql = "INSERT INTO tb_penitipan (id_hewan, tanggal_masuk, tanggal_keluar, nomor_kandang) VALUES (?, ?, ?, ?)";
+    
+           java.sql.PreparedStatement pst = conn.prepareStatement(sql, java.sql.Statement.RETURN_GENERATED_KEYS);
+           pst.setInt(1, idHewanMasuk);
+    
+    // Mengambil tanggal dari JDateChooser (Sesuaikan nama komponenmu)
+           java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd");
+           pst.setString(2, sdf.format(jDateChooser2.getDate()));
+           pst.setString(3, sdf.format(jDateChooser3.getDate()));
+    
+    // Mengambil nomor kandang dari ComboBox
+           pst.setString(4, jComboBox1.getSelectedItem().toString());
+    
+           pst.executeUpdate();
+    
+    // TANGKAP ID PENITIPAN BARU YANG DI-GENERATE DATABASE
+           java.sql.ResultSet rs = pst.getGeneratedKeys();
+           int idPenitipanBaru = 0;
+           if (rs.next()) {
+               idPenitipanBaru = rs.getInt(1);
+           }
+    
+           JOptionPane.showMessageDialog(null, "Booking Penitipan Berhasil Disimpan!");
+    
+    // BUKA BUKTI PENITIPAN & OPER ID PENITIPANNYA
+           BuktiPenitipan bp = new BuktiPenitipan();
+           bp.tangkapIdPenitipan(idPenitipanBaru); // <-- Mengoper ID transaksi penitipan
+           bp.setVisible(true);
+           this.dispose();
+    
+       } catch (Exception e) {
+           JOptionPane.showMessageDialog(null, "Gagal booking: " + e.getMessage());
+       }
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed

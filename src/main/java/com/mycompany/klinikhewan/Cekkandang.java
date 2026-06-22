@@ -3,7 +3,9 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package com.mycompany.klinikhewan;
-
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import javax.swing.JOptionPane;
 /**
  *
  * @author Nafisah
@@ -11,7 +13,12 @@ package com.mycompany.klinikhewan;
 public class Cekkandang extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(Cekkandang.class.getName());
+    
+    int idHewanMasuk;
 
+    public void tangkapIdHewan(int id) {
+    this.idHewanMasuk = id;
+    }
     /**
      * Creates new form Cekkandang
      */
@@ -109,11 +116,10 @@ public class Cekkandang extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        Penitipan Penitipan = new
-            Penitipan () ;
-        
-        Penitipan.setVisible (true);
-        this.dispose ();
+        Penitipan pen = new Penitipan();
+        pen.tangkapIdHewan(this.idHewanMasuk); 
+        pen.setVisible(true);
+        this.dispose();
         
     }//GEN-LAST:event_jButton1ActionPerformed
 
