@@ -109,10 +109,10 @@ public class PilihJenisLayanan extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        Penitipan Penitipan = new
-            Penitipan () ;
+        Cekkandang CK = new
+            Cekkandang () ;
         
-        Penitipan.setVisible(true);
+        CK.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_jButton3ActionPerformed
 
