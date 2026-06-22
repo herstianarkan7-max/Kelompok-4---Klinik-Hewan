@@ -191,17 +191,17 @@ public class JadwalPerawatan extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "Tidak dapat menyimpan. Silakan pilih jadwal yang VALID!");
             return;
         }
-
+        javax.swing.JOptionPane.showMessageDialog(null, "Cek ID Hewan yang sampai di sini: " + idHewanFinal);
         try {
             Connection conn = testkoneksi.getKoneksi();
             String sql = "INSERT INTO tb_perawatan (id_hewan, jenis_perawatan, tanggal, jam) VALUES (?, ?, ?, ?)";
-            PreparedStatement pst = conn.prepareStatement(sql);
+            PreparedStatement pst = conn.prepareStatement(sql, java.sql.Statement.RETURN_GENERATED_KEYS);
 
             // Parameter 1 & 2: ID dan Jenis Perawatan (dari estafet)
             pst.setInt(1, idHewanFinal);
             pst.setString(2, jenisPerawatanFinal);
-
-            // Parameter 3: Mengubah JDayChooser jadi YYYY-MM-DD
+            
+            // Mengubah JDayChooser jadi YYYY-MM-DD
             int hari = jDayChooser1.getDay();
             Calendar cal = Calendar.getInstance();
             cal.set(Calendar.DAY_OF_MONTH, hari);
@@ -214,13 +214,18 @@ public class JadwalPerawatan extends javax.swing.JFrame {
             pst.setString(4, jComboBox1.getSelectedItem().toString());
 
             pst.executeUpdate();
+            java.sql.ResultSet rs = pst.getGeneratedKeys();
+            int idPerawatanBaru = 0;
+            if (rs.next()) {
+                idPerawatanBaru = rs.getInt(1);
+            }
             JOptionPane.showMessageDialog(null, "Jadwal Perawatan Berhasil Disimpan!");
+            NotaBayarPerawatan nota = new NotaBayarPerawatan();
+            nota.tangkapIdPerawatan(idPerawatanBaru); // <-- Ini jembatannya!
+            nota.setVisible(true);
+                this.dispose();
 
-            // Lanjut ke Form Bukti Penitipan
-            // BuktiPenitipan bp = new BuktiPenitipan();
-            // bp.setVisible(true);
-            // this.dispose();
-
+            
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Gagal menyimpan jadwal: " + e.getMessage());
         }

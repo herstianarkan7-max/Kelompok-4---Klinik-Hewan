@@ -3,7 +3,9 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package com.mycompany.klinikhewan;
-
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import javax.swing.JOptionPane;
 /**
  *
  * @author LENOVO
@@ -11,14 +13,18 @@ package com.mycompany.klinikhewan;
 public class PilihJenisLayanan extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(PilihJenisLayanan.class.getName());
-
     /**
      * Creates new form PilihJenisLayanan
      */
+
     public PilihJenisLayanan() {
         initComponents();
     }
-
+    int idHewanTransit;
+    // 2. Fungsi penangkap dari form Data Hewan
+    public void tangkapIdHewan(int idMasuk) {
+        this.idHewanTransit = idMasuk;
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -101,11 +107,14 @@ public class PilihJenisLayanan extends javax.swing.JFrame {
     // TODO add your handling code here:
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        Perawatan Perawatan = new
-            Perawatan () ;
-        
-        Perawatan.setVisible(true);
-        this.dispose();
+        // Buka form Perawatan
+    Perawatan p = new Perawatan();
+
+// INI KUNCI ESTAFETNYA! Oper tongkatnya ke Perawatan
+    p.tangkapIdHewan(this.idHewanTransit); 
+
+    p.setVisible(true);
+        this.dispose(); // Tutup menu pilihan layanan
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed

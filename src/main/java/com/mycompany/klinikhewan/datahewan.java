@@ -117,7 +117,7 @@ public class datahewan extends javax.swing.JFrame {
     
     String sql = "INSERT INTO tb_hewan (id_pemilik, nama_hewan, jenis_hewan, umur_hewan) VALUES (?, ?, ?, ?)";
     
-    PreparedStatement pst = conn.prepareStatement(sql);
+    PreparedStatement pst = conn.prepareStatement(sql, java.sql.Statement.RETURN_GENERATED_KEYS);
     pst.setInt(1, idPemilikBaru);
     pst.setString(2, nama_hewan.getText());
     pst.setString(3, jenis_hewan.getText());
@@ -127,16 +127,20 @@ public class datahewan extends javax.swing.JFrame {
     
     JOptionPane.showMessageDialog(null, "Data Hewan Berhasil Disimpan!");
     
+    java.sql.ResultSet rs = pst.getGeneratedKeys();
+    int idHewanTerbaru = 0;
+    if(rs.next()){
+        idHewanTerbaru = rs.getInt(1);
+    }
+    
+    PilihJenisLayanan pjl = new PilihJenisLayanan();
+        pjl.tangkapIdHewan(idHewanTerbaru);
+        pjl.setVisible(true);
+            this.dispose();
 } catch (Exception e) {
   
     JOptionPane.showMessageDialog(null, "Penyimpanan Gagal: " + e.getMessage());
 }
-        PilihJenisLayanan PilihJenisLayanan = new
-            PilihJenisLayanan();
-         
-         PilihJenisLayanan.setVisible(true);
-        
-        this.dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jenis_hewanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jenis_hewanActionPerformed

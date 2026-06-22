@@ -14,6 +14,12 @@ public class NotaBayarPerawatan extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(NotaBayarPerawatan.class.getName());
     
+    int idTransaksiMasuk;
+
+    // 2. Fungsi penangkap dari form Jadwal
+    public void tangkapIdPerawatan(int idMasuk) {
+        this.idTransaksiMasuk = idMasuk;
+    }
     // Fungsi untuk menangkap ID dan otomatis mengisi semua kotak di form nota
     public void muatDataNota(int idPerawatan) {
         try {
