@@ -84,6 +84,7 @@ public class Perawatan extends javax.swing.JFrame {
         jLabel6.setText("Grooming lengkap, anti kutu dan jamur, pembersihan telinga dan kuku, vitamin bulu");
 
         jButton1.setText("Next");
+        jButton1.addActionListener(this::jButton1ActionPerformed);
 
         jButton2.setText("Back");
         jButton2.addActionListener(this::jButton2ActionPerformed);
@@ -179,6 +180,14 @@ public class Perawatan extends javax.swing.JFrame {
        PJL.setVisible(true);
        this.dispose();
     }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        JadwalPerawatan JP = new
+            JadwalPerawatan();
+        
+        JP.setVisible(true);
+       this.dispose();
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments
