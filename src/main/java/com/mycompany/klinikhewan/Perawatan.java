@@ -3,7 +3,9 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package com.mycompany.klinikhewan;
-
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import javax.swing.JOptionPane;
 /**
  *
  * @author LENOVO
@@ -11,7 +13,11 @@ package com.mycompany.klinikhewan;
 public class Perawatan extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(Perawatan.class.getName());
-
+    
+    int idHewanMasuk;
+    public void tangkapIdHewan(int id) {
+    this.idHewanMasuk = id;
+}
     /**
      * Creates new form Perawatan
      */
@@ -33,11 +39,11 @@ public class Perawatan extends javax.swing.JFrame {
         buttonGroup2 = new javax.swing.ButtonGroup();
         buttonGroup3 = new javax.swing.ButtonGroup();
         jLabel1 = new javax.swing.JLabel();
-        jCheckBox2 = new javax.swing.JCheckBox();
-        jCheckBox3 = new javax.swing.JCheckBox();
-        jCheckBox4 = new javax.swing.JCheckBox();
-        jCheckBox5 = new javax.swing.JCheckBox();
-        jCheckBox6 = new javax.swing.JCheckBox();
+        Basic = new javax.swing.JCheckBox();
+        CleanCare = new javax.swing.JCheckBox();
+        Grooming = new javax.swing.JCheckBox();
+        SPApet = new javax.swing.JCheckBox();
+        CT = new javax.swing.JCheckBox();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
@@ -54,19 +60,19 @@ public class Perawatan extends javax.swing.JFrame {
         jLabel1.setFont(new java.awt.Font("Bookman Old Style", 1, 24)); // NOI18N
         jLabel1.setText("JENIS PERAWATAN");
 
-        jCheckBox2.setText("Basic ");
-        jCheckBox2.addActionListener(this::jCheckBox2ActionPerformed);
+        Basic.setText("Basic ");
+        Basic.addActionListener(this::BasicActionPerformed);
 
-        jCheckBox3.setText("Clean Care");
-        jCheckBox3.addActionListener(this::jCheckBox3ActionPerformed);
+        CleanCare.setText("Clean Care");
+        CleanCare.addActionListener(this::CleanCareActionPerformed);
 
-        jCheckBox4.setText("Grooming");
-        jCheckBox4.addActionListener(this::jCheckBox4ActionPerformed);
+        Grooming.setText("Grooming");
+        Grooming.addActionListener(this::GroomingActionPerformed);
 
-        jCheckBox5.setText("SPA Pet");
-        jCheckBox5.addActionListener(this::jCheckBox5ActionPerformed);
+        SPApet.setText("SPA Pet");
+        SPApet.addActionListener(this::SPApetActionPerformed);
 
-        jCheckBox6.setText("Complete Treatment");
+        CT.setText("Complete Treatment");
 
         jLabel2.setFont(new java.awt.Font("Segoe UI", 0, 10)); // NOI18N
         jLabel2.setText("Mandi biasa, pengeringan bulu, sisir bulu, dan parfume hewan");
@@ -96,11 +102,11 @@ public class Perawatan extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGap(40, 40, 40)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jCheckBox6)
-                    .addComponent(jCheckBox5)
-                    .addComponent(jCheckBox4)
-                    .addComponent(jCheckBox3)
-                    .addComponent(jCheckBox2)
+                    .addComponent(CT)
+                    .addComponent(SPApet)
+                    .addComponent(Grooming)
+                    .addComponent(CleanCare)
+                    .addComponent(Basic)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(21, 21, 21)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
@@ -126,25 +132,25 @@ public class Perawatan extends javax.swing.JFrame {
                 .addContainerGap(30, Short.MAX_VALUE)
                 .addComponent(jLabel1)
                 .addGap(20, 20, 20)
-                .addComponent(jCheckBox2)
+                .addComponent(Basic)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jCheckBox3)
+                .addComponent(CleanCare)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jCheckBox4)
+                .addComponent(Grooming)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel7)
                 .addGap(2, 2, 2)
-                .addComponent(jCheckBox5)
+                .addComponent(SPApet)
                 .addGap(4, 4, 4)
                 .addComponent(jLabel5)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jCheckBox6)
+                .addComponent(CT)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel6)
                 .addGap(18, 18, 18)
@@ -157,21 +163,21 @@ public class Perawatan extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jCheckBox2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox2ActionPerformed
+    private void BasicActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BasicActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jCheckBox2ActionPerformed
+    }//GEN-LAST:event_BasicActionPerformed
 
-    private void jCheckBox3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox3ActionPerformed
+    private void CleanCareActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CleanCareActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jCheckBox3ActionPerformed
+    }//GEN-LAST:event_CleanCareActionPerformed
 
-    private void jCheckBox4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox4ActionPerformed
+    private void GroomingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_GroomingActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jCheckBox4ActionPerformed
+    }//GEN-LAST:event_GroomingActionPerformed
 
-    private void jCheckBox5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox5ActionPerformed
+    private void SPApetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SPApetActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jCheckBox5ActionPerformed
+    }//GEN-LAST:event_SPApetActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         PilihJenisLayanan PJL = new
@@ -182,11 +188,25 @@ public class Perawatan extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        JadwalPerawatan JP = new
-            JadwalPerawatan();
-        
-        JP.setVisible(true);
-       this.dispose();
+        // 1. Menggabungkan pilihan checkbox menjadi satu teks string
+String pilihanPerawatan = "";
+
+if (Basic.isSelected()) { pilihanPerawatan += "Basic; "; }
+if (CleanCare.isSelected()) { pilihanPerawatan += "Clean Care; "; }
+if (Grooming.isSelected()) { pilihanPerawatan += "Grooming; "; }
+if (SPApet.isSelected()) { pilihanPerawatan += "SPA Pet; "; }
+if (CT.isSelected()) { pilihanPerawatan += "Complete Treatment; "; }
+
+// Validasi: Pastikan pengguna memilih minimal satu perawatan
+if (pilihanPerawatan.equals("")) {
+    javax.swing.JOptionPane.showMessageDialog(null, "Silakan pilih jenis perawatan terlebih dahulu!");
+} else {
+    // 2. Kirim data (id_hewan dan string pilihanPerawatan) ke form Jadwal Perawatan
+    JadwalPerawatan jp = new JadwalPerawatan();
+    jp.tangkapDataDariFormPerawatan(idHewanMasuk, pilihanPerawatan);
+    jp.setVisible(true);
+    this.dispose();
+}
     }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
@@ -215,17 +235,17 @@ public class Perawatan extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JCheckBox Basic;
+    private javax.swing.JCheckBox CT;
+    private javax.swing.JCheckBox CleanCare;
+    private javax.swing.JCheckBox Grooming;
+    private javax.swing.JCheckBox SPApet;
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.ButtonGroup buttonGroup2;
     private javax.swing.ButtonGroup buttonGroup3;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JCheckBox jCheckBox1;
-    private javax.swing.JCheckBox jCheckBox2;
-    private javax.swing.JCheckBox jCheckBox3;
-    private javax.swing.JCheckBox jCheckBox4;
-    private javax.swing.JCheckBox jCheckBox5;
-    private javax.swing.JCheckBox jCheckBox6;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

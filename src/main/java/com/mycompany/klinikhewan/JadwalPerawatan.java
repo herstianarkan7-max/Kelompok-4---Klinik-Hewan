@@ -3,15 +3,24 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package com.mycompany.klinikhewan;
-
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import javax.swing.JOptionPane;
 /**
  *
  * @author LENOVO
  */
+
 public class JadwalPerawatan extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(JadwalPerawatan.class.getName());
+    int idHewanFinal;
+    String jenisPerawatanFinal;
 
+    public void tangkapDataDariFormPerawatan(int id, String perawatan) {
+        this.idHewanFinal = id;
+        this.jenisPerawatanFinal = perawatan;
+    }
     /**
      * Creates new form JadwalPerawatan
      */
