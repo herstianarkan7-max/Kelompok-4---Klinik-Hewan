@@ -3,7 +3,9 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package com.mycompany.klinikhewan;
-
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import javax.swing.JOptionPane;
 /**
  *
  * @author Nafisah
@@ -11,7 +13,50 @@ package com.mycompany.klinikhewan;
 public class NotaBayarPerawatan extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(NotaBayarPerawatan.class.getName());
-
+    
+    // Fungsi untuk menangkap ID dan otomatis mengisi semua kotak di form nota
+    public void muatDataNota(int idPerawatan) {
+        try {
+            java.sql.Connection conn = testkoneksi.getKoneksi();
+            
+            // Perintah SQL JOIN untuk menyedot data dari 3 tabel sekaligus
+            String sql = "SELECT p.nama, h.nama_hewan, r.jenis_perawatan, r.tanggal " +
+                         "FROM tb_perawatan r " +
+                         "JOIN tb_hewan h ON r.id_hewan = h.id_hewan " +
+                         "JOIN tb_pemilik p ON h.id_pemilik = p.id_pemilik " +
+                         "WHERE r.id_perawatan = ?";
+            
+            java.sql.PreparedStatement pst = conn.prepareStatement(sql, java.sql.Statement.RETURN_GENERATED_KEYS);
+            pst.setInt(1, idPerawatan);
+            java.sql.ResultSet rs = pst.executeQuery();
+            
+            if (rs.next()) {
+                // 1. Mengisi kotak teks otomatis dari database
+                txtPelanggan.setText(rs.getString("nama"));
+                txtNamaHewan.setText(rs.getString("nama_hewan"));
+                txtJenisLayanan.setText(rs.getString("jenis_perawatan"));
+                txtTanggal.setText(rs.getString("tanggal"));
+                
+                // 2. Hitung harga otomatis berdasarkan teks layanan yang masuk
+                String layanan = rs.getString("jenis_perawatan");
+                int hargaTotal = 0;
+                
+                // Cek isi teks layanan dan jumlahkan harganya
+                if (layanan.contains("Basic")) { hargaTotal += 50000; }
+                if (layanan.contains("Clean Care")) { hargaTotal += 75000; }
+                if (layanan.contains("Grooming")) { hargaTotal += 100000; }
+                if (layanan.contains("SPA Pet")) { hargaTotal += 120000; }
+                if (layanan.contains("Complete Treatment")) { hargaTotal += 200000; }
+                
+                // 3. Tampilkan harga ke kotak Biaya dan Total
+                txtBiayaLayanan.setText(String.valueOf(hargaTotal));
+                txtTotal.setText(String.valueOf(hargaTotal));
+            }
+            
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Gagal memuat data nota: " + e.getMessage());
+        }
+    }
     /**
      * Creates new form NotaBayarPerawatan
      */
@@ -29,29 +74,29 @@ public class NotaBayarPerawatan extends javax.swing.JFrame {
     private void initComponents() {
 
         jLabel6 = new javax.swing.JLabel();
-        jTextField9 = new javax.swing.JTextField();
+        txtTanggal = new javax.swing.JTextField();
         jLabel7 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
-        jTextField3 = new javax.swing.JTextField();
+        txtPelanggan = new javax.swing.JTextField();
         jLabel10 = new javax.swing.JLabel();
         jLabel12 = new javax.swing.JLabel();
         jLabel13 = new javax.swing.JLabel();
         jLabel14 = new javax.swing.JLabel();
         jLabel15 = new javax.swing.JLabel();
         jLabel16 = new javax.swing.JLabel();
-        jTextField5 = new javax.swing.JTextField();
-        jTextField1 = new javax.swing.JTextField();
+        txtNamaHewan = new javax.swing.JTextField();
+        txtJenisLayanan = new javax.swing.JTextField();
         jLabel17 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jLabel11 = new javax.swing.JLabel();
         jLabel18 = new javax.swing.JLabel();
-        jTextField2 = new javax.swing.JTextField();
+        txtBiayaLayanan = new javax.swing.JTextField();
         jTextField4 = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
         jTextField7 = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
-        jTextField8 = new javax.swing.JTextField();
+        txtTotal = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
 
@@ -59,7 +104,7 @@ public class NotaBayarPerawatan extends javax.swing.JFrame {
 
         jLabel6.setText("Nama Hewan");
 
-        jTextField9.addActionListener(this::jTextField9ActionPerformed);
+        txtTanggal.addActionListener(this::txtTanggalActionPerformed);
 
         jLabel7.setText("Jenis Layanan");
 
@@ -79,9 +124,9 @@ public class NotaBayarPerawatan extends javax.swing.JFrame {
 
         jLabel16.setText("---------------------------------------------------------------");
 
-        jTextField5.addActionListener(this::jTextField5ActionPerformed);
+        txtNamaHewan.addActionListener(this::txtNamaHewanActionPerformed);
 
-        jTextField1.addActionListener(this::jTextField1ActionPerformed);
+        txtJenisLayanan.addActionListener(this::txtJenisLayananActionPerformed);
 
         jLabel17.setText("---------------------------------------------------------------");
 
@@ -93,7 +138,7 @@ public class NotaBayarPerawatan extends javax.swing.JFrame {
 
         jLabel18.setText("---------------------------------------------------------------");
 
-        jTextField2.addActionListener(this::jTextField2ActionPerformed);
+        txtBiayaLayanan.addActionListener(this::txtBiayaLayananActionPerformed);
 
         jTextField4.addActionListener(this::jTextField4ActionPerformed);
 
@@ -105,7 +150,7 @@ public class NotaBayarPerawatan extends javax.swing.JFrame {
         jLabel2.setFont(new java.awt.Font("Bookman Old Style", 0, 12)); // NOI18N
         jLabel2.setText("PT. KURNIA DAYA SEJAHTERA");
 
-        jTextField8.addActionListener(this::jTextField8ActionPerformed);
+        txtTotal.addActionListener(this::txtTotalActionPerformed);
 
         jLabel5.setText("Pelanggan");
 
@@ -147,17 +192,17 @@ public class NotaBayarPerawatan extends javax.swing.JFrame {
                                     .addComponent(jLabel7))
                                 .addGap(23, 23, 23)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jTextField3)
-                                    .addComponent(jTextField5)
-                                    .addComponent(jTextField1)))
+                                    .addComponent(txtPelanggan)
+                                    .addComponent(txtNamaHewan)
+                                    .addComponent(txtJenisLayanan)))
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel8)
                                     .addComponent(jLabel3))
                                 .addGap(18, 18, 18)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jTextField8)
-                                    .addComponent(jTextField2)))
+                                    .addComponent(txtTotal)
+                                    .addComponent(txtBiayaLayanan)))
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                 .addComponent(jLabel17)
                                 .addGroup(layout.createSequentialGroup()
@@ -179,8 +224,8 @@ public class NotaBayarPerawatan extends javax.swing.JFrame {
                         .addGap(100, 100, 100)
                         .addComponent(jLabel9)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextField9, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(0, 100, Short.MAX_VALUE))
+                        .addComponent(txtTanggal, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(0, 0, Short.MAX_VALUE))
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel16)
@@ -211,26 +256,26 @@ public class NotaBayarPerawatan extends javax.swing.JFrame {
                         .addGap(12, 12, 12)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel5)
-                            .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(txtPelanggan, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel6)
-                            .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(txtNamaHewan, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel7)
-                            .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(txtJenisLayanan, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jLabel17)
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel8)
-                            .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(txtBiayaLayanan, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(18, 18, 18)
                         .addComponent(jLabel3))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(194, 194, 194)
-                        .addComponent(jTextField8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(txtTotal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.TRAILING)
@@ -244,28 +289,28 @@ public class NotaBayarPerawatan extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel9)
-                    .addComponent(jTextField9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtTanggal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(19, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jTextField9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField9ActionPerformed
+    private void txtTanggalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtTanggalActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField9ActionPerformed
+    }//GEN-LAST:event_txtTanggalActionPerformed
 
-    private void jTextField5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField5ActionPerformed
+    private void txtNamaHewanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNamaHewanActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField5ActionPerformed
+    }//GEN-LAST:event_txtNamaHewanActionPerformed
 
-    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
+    private void txtJenisLayananActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtJenisLayananActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField1ActionPerformed
+    }//GEN-LAST:event_txtJenisLayananActionPerformed
 
-    private void jTextField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField2ActionPerformed
+    private void txtBiayaLayananActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtBiayaLayananActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField2ActionPerformed
+    }//GEN-LAST:event_txtBiayaLayananActionPerformed
 
     private void jTextField4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField4ActionPerformed
         // TODO add your handling code here:
@@ -275,9 +320,9 @@ public class NotaBayarPerawatan extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextField7ActionPerformed
 
-    private void jTextField8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField8ActionPerformed
+    private void txtTotalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtTotalActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField8ActionPerformed
+    }//GEN-LAST:event_txtTotalActionPerformed
 
     /**
      * @param args the command line arguments
@@ -323,13 +368,13 @@ public class NotaBayarPerawatan extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
     private javax.swing.JTextField jTextField4;
-    private javax.swing.JTextField jTextField5;
     private javax.swing.JTextField jTextField7;
-    private javax.swing.JTextField jTextField8;
-    private javax.swing.JTextField jTextField9;
+    private javax.swing.JTextField txtBiayaLayanan;
+    private javax.swing.JTextField txtJenisLayanan;
+    private javax.swing.JTextField txtNamaHewan;
+    private javax.swing.JTextField txtPelanggan;
+    private javax.swing.JTextField txtTanggal;
+    private javax.swing.JTextField txtTotal;
     // End of variables declaration//GEN-END:variables
 }
