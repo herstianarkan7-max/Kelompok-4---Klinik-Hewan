@@ -3,7 +3,11 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package com.mycompany.klinikhewan;
-
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 /**
  *
  * @author LENOVO
@@ -12,11 +16,53 @@ public class Pemeriksaan extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(Pemeriksaan.class.getName());
 
+    int idHewanMasuk;
+
+    // 2. Fungsi penangkap dari form Pemeriksaan (Tabel)
+    public void tangkapIdHewan(int id) {
+        this.idHewanMasuk = id;
+    
+    }
+    
+    public void tampilkanJadwalBooking() {
+        // Membuat format kolom tabel
+        DefaultTableModel model = new DefaultTableModel();
+        model.addColumn("Tanggal");
+        model.addColumn("Jam");
+        model.addColumn("Dokter");
+        model.addColumn("Status");
+        
+        try {
+            Connection conn = testkoneksi.getKoneksi();
+            // Mengambil data jadwal, diurutkan dari tanggal terbaru
+            String sql = "SELECT tanggal, jam, dokter FROM tb_pemeriksaan ORDER BY tanggal ASC, jam ASC";
+            java.sql.PreparedStatement pst = conn.prepareStatement(sql);
+            ResultSet rs = pst.executeQuery();
+            
+            // Masukkan data ke tabel satu per satu secara berulang (Looping)
+            while (rs.next()) {
+                model.addRow(new Object[]{
+                    rs.getString("tanggal"),
+                    rs.getString("jam"),
+                    rs.getString("dokter"),
+                    "Sudah Dibooking" // Status teks statis untuk menandakan jadwal penuh
+                });
+            }
+            
+            // Masukkan format model tadi ke desain tabelmu 
+            // PENTING: Pastikan variabel tabelmu bernama jTable1, atau ganti namanya di bawah ini
+            Tanggal.setModel(model); 
+            
+        } catch (Exception e) {
+            System.out.println("Gagal memuat tabel: " + e.getMessage());
+        }
+    }
     /**
      * Creates new form Pemeriksaan
      */
     public Pemeriksaan() {
         initComponents();
+        tampilkanJadwalBooking();
     }
 
     /**
@@ -97,19 +143,21 @@ public class Pemeriksaan extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-       PilihJenisLayanan PJL = new
-            PilihJenisLayanan();
+                                        
+        PilihJenisLayanan PJL = new PilihJenisLayanan();
        
-       PJL.setVisible(true);
-       this.dispose();
+        // KEMBALIKAN TONGKAT ESTAFETNYA!
+        PJL.tangkapIdHewan(this.idHewanMasuk);
+       
+        PJL.setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        JadwalPemeriksaan JP = new
-            JadwalPemeriksaan();
-        
+        JadwalPemeriksaan JP = new JadwalPemeriksaan();
+        JP.tangkapIdHewan(this.idHewanMasuk);
         JP.setVisible(true);
-       this.dispose();
+        this.dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
 
     /**

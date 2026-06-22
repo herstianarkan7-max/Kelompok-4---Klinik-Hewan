@@ -3,7 +3,9 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package com.mycompany.klinikhewan;
-
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import javax.swing.JOptionPane;
 /**
  *
  * @author LENOVO
@@ -11,7 +13,56 @@ package com.mycompany.klinikhewan;
 public class JadwalPemeriksaan extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(JadwalPemeriksaan.class.getName());
+    
+    int idHewanMasuk;
 
+    public void tangkapIdHewan(int id) {
+        this.idHewanMasuk = id;
+    }
+    
+    public void cekValidasiJadwalDokter() {
+    try {
+        // 1. Hentikan pengecekan jika tanggal belum diisi
+        if (jDateChooser1.getDate() == null) {
+            lblStatus.setText("Pilih tanggal terlebih dahulu");
+            lblStatus.setForeground(java.awt.Color.BLACK);
+            return; 
+        }
+
+        // 2. Ambil data yang sedang dipilih di layar
+        java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd");
+        String formatTanggal = sdf.format(jDateChooser1.getDate()); // Sesuaikan nama variabel kalendermu
+        
+        String jamDipilih = jComboBox1.getSelectedItem().toString(); // Sesuaikan nama ComboBox Jam
+        String dokterDipilih = jComboBox2.getSelectedItem().toString(); // Sesuaikan nama ComboBox Dokter
+
+        // 3. Cari ke database apakah kombinasi 3 data ini sudah ada yang punya
+        java.sql.Connection conn = testkoneksi.getKoneksi();
+        String sql = "SELECT * FROM tb_pemeriksaan WHERE tanggal = ? AND jam = ? AND dokter = ?";
+        
+        java.sql.PreparedStatement pst = conn.prepareStatement(sql);
+        pst.setString(1, formatTanggal);
+        pst.setString(2, jamDipilih);
+        pst.setString(3, dokterDipilih);
+        
+        java.sql.ResultSet rs = pst.executeQuery();
+
+        // 4. Ubah status label berdasarkan hasil pencarian
+        if (rs.next()) {
+            // Jika datanya ketemu = Dokter tersebut sibuk pada jam & tanggal itu!
+            lblStatus.setText("INVALID: " + dokterDipilih + " sudah dibooking!");
+            lblStatus.setForeground(java.awt.Color.RED);
+        } else {
+            // Jika kosong = Dokter tersedia dan bisa dibooking
+            lblStatus.setText("VALID: Dokter Tersedia");
+            lblStatus.setForeground(new java.awt.Color(0, 153, 0)); // Warna hijau
+        }
+        
+        } catch (Exception e) {
+            System.out.println("Error cek dokter: " + e.getMessage());
+        }
+    }
+    
     /**
      * Creates new form JadwalPemeriksaan
      */
@@ -36,6 +87,7 @@ public class JadwalPemeriksaan extends javax.swing.JFrame {
         jComboBox1 = new javax.swing.JComboBox<>();
         jLabel4 = new javax.swing.JLabel();
         jComboBox2 = new javax.swing.JComboBox<>();
+        lblStatus = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -49,9 +101,17 @@ public class JadwalPemeriksaan extends javax.swing.JFrame {
         jButton1.setText("Next");
         jButton1.addActionListener(this::jButton1ActionPerformed);
 
+        jDateChooser1.addPropertyChangeListener(this::jDateChooser1PropertyChange);
+
         jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "09.00", "10.00", "11.00", "13.00", "14.00", "15.00", "16.00", "17.00", "18.00", "19.00", "20.00" }));
+        jComboBox1.addActionListener(this::jComboBox1ActionPerformed);
 
         jLabel4.setText("Dokter");
+
+        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Andi", "Siska" }));
+        jComboBox2.addActionListener(this::jComboBox2ActionPerformed);
+
+        lblStatus.setText("jLabel5");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -81,8 +141,13 @@ public class JadwalPemeriksaan extends javax.swing.JFrame {
                         .addGap(134, 134, 134))))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton1)
-                .addGap(54, 54, 54))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jButton1)
+                        .addGap(54, 54, 54))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(lblStatus)
+                        .addGap(72, 72, 72))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -101,7 +166,9 @@ public class JadwalPemeriksaan extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel4)
                     .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 36, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 14, Short.MAX_VALUE)
+                .addComponent(lblStatus)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton1)
                 .addGap(38, 38, 38))
         );
@@ -110,8 +177,62 @@ public class JadwalPemeriksaan extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
+        if (lblStatus.getText().contains("INVALID") || lblStatus.getText().contains("Pilih")) {
+            javax.swing.JOptionPane.showMessageDialog(null, "Tidak bisa dilanjutkan! Silakan pilih Dokter atau Jam yang VALID.");
+            return; // Hentikan proses di sini
+        }
+
+        // 2. PROSES SIMPAN KE DATABASE (Jika jadwal lolos sensor)
+        try {
+            java.sql.Connection conn = testkoneksi.getKoneksi();
+            String sql = "INSERT INTO tb_pemeriksaan (id_hewan, tanggal, jam, dokter) VALUES (?, ?, ?, ?)";
+            
+            // Gunakan RETURN_GENERATED_KEYS untuk menangkap nomor nota
+            java.sql.PreparedStatement pst = conn.prepareStatement(sql, java.sql.Statement.RETURN_GENERATED_KEYS);
+            
+            // Masukkan data dari form ke MySQL
+            pst.setInt(1, idHewanMasuk); // ID dari lemparan form sebelumnya
+            
+            java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd");
+            String formatTanggal = sdf.format(jDateChooser1.getDate()); 
+            pst.setString(2, formatTanggal);
+            
+            pst.setString(3, jComboBox1.getSelectedItem().toString()); // Jam
+            pst.setString(4, jComboBox2.getSelectedItem().toString()); // Dokter
+            
+            pst.executeUpdate();
+            
+            // 3. TANGKAP ID BARU & LEMPAR KE NOTA
+            java.sql.ResultSet rs = pst.getGeneratedKeys();
+            int idPemeriksaanBaru = 0;
+            if (rs.next()) {
+                idPemeriksaanBaru = rs.getInt(1);
+            }
+            
+            javax.swing.JOptionPane.showMessageDialog(null, "Booking Jadwal Pemeriksaan Berhasil Disimpan!");
+            
+            // Buka form Nota dan oper ID-nya
+            NotaBayar nota = new NotaBayar();
+            nota.tangkapIdPemeriksaan(idPemeriksaanBaru); 
+            nota.setVisible(true);
+            this.dispose(); // Tutup form input ini
+            
+        } catch (Exception e) {
+            javax.swing.JOptionPane.showMessageDialog(null, "Gagal menyimpan jadwal: " + e.getMessage());
+        }
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jComboBox2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox2ActionPerformed
+       cekValidasiJadwalDokter();
+    }//GEN-LAST:event_jComboBox2ActionPerformed
+
+    private void jDateChooser1PropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_jDateChooser1PropertyChange
+       cekValidasiJadwalDokter();
+    }//GEN-LAST:event_jDateChooser1PropertyChange
+
+    private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
+       cekValidasiJadwalDokter();
+    }//GEN-LAST:event_jComboBox1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -147,5 +268,6 @@ public class JadwalPemeriksaan extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel lblStatus;
     // End of variables declaration//GEN-END:variables
 }
