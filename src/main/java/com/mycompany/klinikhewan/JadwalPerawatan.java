@@ -6,6 +6,12 @@ package com.mycompany.klinikhewan;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import javax.swing.JOptionPane;
+import java.awt.Color;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 /**
  *
  * @author LENOVO
@@ -14,6 +20,7 @@ import javax.swing.JOptionPane;
 public class JadwalPerawatan extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(JadwalPerawatan.class.getName());
+    
     int idHewanFinal;
     String jenisPerawatanFinal;
 
@@ -26,8 +33,54 @@ public class JadwalPerawatan extends javax.swing.JFrame {
      */
     public JadwalPerawatan() {
         initComponents();
+        
+        // Menambahkan pendeteksi klik otomatis pada JDayChooser
+        jDayChooser1.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                cekValidasiJadwal();
+            }
+        });
     }
+    public void cekValidasiJadwal() {
+        try {
+            int hariDipilih = jDayChooser1.getDay();
+            Calendar calPilihan = Calendar.getInstance();
+            calPilihan.set(Calendar.DAY_OF_MONTH, hariDipilih);
 
+            Calendar calHariIni = Calendar.getInstance();
+
+            // 1. Validasi Masa Lalu
+            if (hariDipilih < calHariIni.get(Calendar.DAY_OF_MONTH)) {
+                lblStatus.setText("INVALID: Tanggal sudah terlewat!");
+                lblStatus.setForeground(Color.RED);
+                return;
+            }
+
+            // 2. Siapkan data untuk dicek ke Database
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            String formatTanggal = sdf.format(calPilihan.getTime());
+            String jamDipilih = jComboBox1.getSelectedItem().toString();
+
+            Connection conn = testkoneksi.getKoneksi();
+            String sql = "SELECT * FROM tb_perawatan WHERE tanggal = ? AND jam = ?";
+            PreparedStatement pst = conn.prepareStatement(sql);
+            pst.setString(1, formatTanggal);
+            pst.setString(2, jamDipilih);
+
+            ResultSet rs = pst.executeQuery();
+
+            // 3. Tentukan hasil validasi
+            if (rs.next()) {
+                lblStatus.setText("INVALID: Jadwal Penuh!");
+                lblStatus.setForeground(Color.RED);
+            } else {
+                lblStatus.setText("VALID: Jadwal Tersedia");
+                lblStatus.setForeground(new Color(0, 153, 0)); // Hijau
+            }
+        } catch (Exception e) {
+            System.out.println("Error cek jadwal: " + e.getMessage());
+        }
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -44,7 +97,7 @@ public class JadwalPerawatan extends javax.swing.JFrame {
         jComboBox1 = new javax.swing.JComboBox<>();
         jDayChooser1 = new com.toedter.calendar.JDayChooser();
         jLabel3 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
+        lblStatus = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -55,6 +108,7 @@ public class JadwalPerawatan extends javax.swing.JFrame {
         jButton2.addActionListener(this::jButton2ActionPerformed);
 
         jButton1.setText("Next");
+        jButton1.addActionListener(this::jButton1ActionPerformed);
 
         jLabel2.setText("Jam:");
 
@@ -63,7 +117,8 @@ public class JadwalPerawatan extends javax.swing.JFrame {
 
         jLabel3.setText("Tanggal:");
 
-        jTextField1.addActionListener(this::jTextField1ActionPerformed);
+        lblStatus.setText("jTextField1");
+        lblStatus.addActionListener(this::lblStatusActionPerformed);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -86,12 +141,13 @@ public class JadwalPerawatan extends javax.swing.JFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel2)
                             .addComponent(jDayChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, 452, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(lblStatus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel3))
+                        .addComponent(jLabel3)
                         .addGap(0, 0, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
@@ -106,10 +162,10 @@ public class JadwalPerawatan extends javax.swing.JFrame {
                 .addGap(5, 5, 5)
                 .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 43, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblStatus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 77, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton1)
                     .addComponent(jButton2))
@@ -126,39 +182,60 @@ public class JadwalPerawatan extends javax.swing.JFrame {
         PJL.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_jButton2ActionPerformed
-
+    
     private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
-        // TODO add your handling code here:
+        cekValidasiJadwal();
     }//GEN-LAST:event_jComboBox1ActionPerformed
 
-    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField1ActionPerformed
-
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ReflectiveOperationException | javax.swing.UnsupportedLookAndFeelException ex) {
-            logger.log(java.util.logging.Level.SEVERE, null, ex);
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        if (lblStatus.getText().contains("INVALID") || lblStatus.getText().trim().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Tidak dapat menyimpan. Silakan pilih jadwal yang VALID!");
+            return;
         }
-        //</editor-fold>
 
-        /* Create and display the form */
+        try {
+            Connection conn = testkoneksi.getKoneksi();
+            String sql = "INSERT INTO tb_perawatan (id_hewan, jenis_perawatan, tanggal, jam) VALUES (?, ?, ?, ?)";
+            PreparedStatement pst = conn.prepareStatement(sql);
+
+            // Parameter 1 & 2: ID dan Jenis Perawatan (dari estafet)
+            pst.setInt(1, idHewanFinal);
+            pst.setString(2, jenisPerawatanFinal);
+
+            // Parameter 3: Mengubah JDayChooser jadi YYYY-MM-DD
+            int hari = jDayChooser1.getDay();
+            Calendar cal = Calendar.getInstance();
+            cal.set(Calendar.DAY_OF_MONTH, hari);
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            String formatTanggal = sdf.format(cal.getTime());
+            
+            pst.setString(3, formatTanggal);
+            
+            // Parameter 4: Ambil Jam
+            pst.setString(4, jComboBox1.getSelectedItem().toString());
+
+            pst.executeUpdate();
+            JOptionPane.showMessageDialog(null, "Jadwal Perawatan Berhasil Disimpan!");
+
+            // Lanjut ke Form Bukti Penitipan
+            // BuktiPenitipan bp = new BuktiPenitipan();
+            // bp.setVisible(true);
+            // this.dispose();
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Gagal menyimpan jadwal: " + e.getMessage());
+        }
+    }                                        
+
+    public static void main(String args[]) {
+        // ... (Biarkan kode Look and feel bawaanmu di sini) ...
         java.awt.EventQueue.invokeLater(() -> new JadwalPerawatan().setVisible(true));
-    }
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void lblStatusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_lblStatusActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_lblStatusActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
@@ -168,6 +245,6 @@ public class JadwalPerawatan extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JTextField jTextField1;
+    private javax.swing.JTextField lblStatus;
     // End of variables declaration//GEN-END:variables
 }

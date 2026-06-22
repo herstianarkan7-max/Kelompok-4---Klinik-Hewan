@@ -188,7 +188,7 @@ public class Perawatan extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // 1. Menggabungkan pilihan checkbox menjadi satu teks string
+
 String pilihanPerawatan = "";
 
 if (Basic.isSelected()) { pilihanPerawatan += "Basic; "; }
@@ -197,11 +197,9 @@ if (Grooming.isSelected()) { pilihanPerawatan += "Grooming; "; }
 if (SPApet.isSelected()) { pilihanPerawatan += "SPA Pet; "; }
 if (CT.isSelected()) { pilihanPerawatan += "Complete Treatment; "; }
 
-// Validasi: Pastikan pengguna memilih minimal satu perawatan
 if (pilihanPerawatan.equals("")) {
     javax.swing.JOptionPane.showMessageDialog(null, "Silakan pilih jenis perawatan terlebih dahulu!");
 } else {
-    // 2. Kirim data (id_hewan dan string pilihanPerawatan) ke form Jadwal Perawatan
     JadwalPerawatan jp = new JadwalPerawatan();
     jp.tangkapDataDariFormPerawatan(idHewanMasuk, pilihanPerawatan);
     jp.setVisible(true);

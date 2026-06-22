@@ -119,9 +119,9 @@ public class datahewan extends javax.swing.JFrame {
     
     PreparedStatement pst = conn.prepareStatement(sql);
     pst.setInt(1, idPemilikBaru);
-    pst.setString(2, nama_hewan.getText()); // Mengisi Nama Hewan
-    pst.setString(3, jenis_hewan.getText()); // Mengisi Jenis Hewan
-    pst.setString(4, umur_hewan.getText()); // Mengisi Umur Hewan
+    pst.setString(2, nama_hewan.getText());
+    pst.setString(3, jenis_hewan.getText());
+    pst.setString(4, umur_hewan.getText());
     
     pst.executeUpdate();
     
