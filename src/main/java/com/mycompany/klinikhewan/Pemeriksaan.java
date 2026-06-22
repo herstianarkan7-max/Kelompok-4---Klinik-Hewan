@@ -56,6 +56,7 @@ public class Pemeriksaan extends javax.swing.JFrame {
         jScrollPane1.setViewportView(Tanggal);
 
         jButton1.setText("Next");
+        jButton1.addActionListener(this::jButton1ActionPerformed);
 
         jButton2.setText("Back");
         jButton2.addActionListener(this::jButton2ActionPerformed);
@@ -102,6 +103,14 @@ public class Pemeriksaan extends javax.swing.JFrame {
        PJL.setVisible(true);
        this.dispose();
     }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        JadwalPemeriksaan JP = new
+            JadwalPemeriksaan();
+        
+        JP.setVisible(true);
+       this.dispose();
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments
