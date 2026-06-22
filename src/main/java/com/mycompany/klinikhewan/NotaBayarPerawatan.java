@@ -19,6 +19,7 @@ public class NotaBayarPerawatan extends javax.swing.JFrame {
     // 2. Fungsi penangkap dari form Jadwal
     public void tangkapIdPerawatan(int idMasuk) {
         this.idTransaksiMasuk = idMasuk;
+        muatDataNota(this.idTransaksiMasuk);
     }
     // Fungsi untuk menangkap ID dan otomatis mengisi semua kotak di form nota
     public void muatDataNota(int idPerawatan) {
@@ -32,7 +33,7 @@ public class NotaBayarPerawatan extends javax.swing.JFrame {
                          "JOIN tb_pemilik p ON h.id_pemilik = p.id_pemilik " +
                          "WHERE r.id_perawatan = ?";
             
-            java.sql.PreparedStatement pst = conn.prepareStatement(sql, java.sql.Statement.RETURN_GENERATED_KEYS);
+            java.sql.PreparedStatement pst = conn.prepareStatement(sql);
             pst.setInt(1, idPerawatan);
             java.sql.ResultSet rs = pst.executeQuery();
             
