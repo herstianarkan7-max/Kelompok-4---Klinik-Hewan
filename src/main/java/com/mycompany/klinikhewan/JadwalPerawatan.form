@@ -45,7 +45,7 @@
                           <Group type="102" alignment="0" attributes="0">
                               <Component id="jComboBox1" min="-2" max="-2" attributes="0"/>
                               <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                              <Component id="lblStatus" min="-2" max="-2" attributes="0"/>
+                              <Component id="lblStatus" min="-2" pref="232" max="-2" attributes="0"/>
                           </Group>
                       </Group>
                       <EmptySpace max="32767" attributes="0"/>
@@ -147,9 +147,6 @@
       </Properties>
     </Component>
     <Component class="javax.swing.JTextField" name="lblStatus">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="jTextField1"/>
-      </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="lblStatusActionPerformed"/>
       </Events>
