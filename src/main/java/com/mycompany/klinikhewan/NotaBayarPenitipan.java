@@ -36,7 +36,7 @@ public void muatDataNotaAkhir() {
         if (rs.next()) {
             txtPelanggan.setText(rs.getString("nama"));
             txtNamaHewan.setText(rs.getString("nama_hewan"));
-            txtJenisLayanan.setText(rs.getString("tanggal_masuk"));
+            txtTanggalMasuk.setText(rs.getString("tanggal_masuk"));
             txtTanggalKeluar.setText(rs.getString("tanggal_keluar"));
             txtJenisLayanan.setText("Penitipan Kandang: " + rs.getString("nomor_kandang"));
             
