@@ -6,16 +6,16 @@ package com.mycompany.klinikhewan;
 
 /**
  *
- * @author ASUS
+ * @author MYBOOK 14E
  */
-public class palingawal extends javax.swing.JFrame {
+public class TerimaKasih extends javax.swing.JFrame {
     
-    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(palingawal.class.getName());
+    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(TerimaKasih.class.getName());
 
     /**
-     * Creates new form palingawal
+     * Creates new form TerimaKasih
      */
-    public palingawal() {
+    public TerimaKasih() {
         initComponents();
     }
 
@@ -29,48 +29,46 @@ public class palingawal extends javax.swing.JFrame {
     private void initComponents() {
 
         jLabel1 = new javax.swing.JLabel();
-        jButton2 = new javax.swing.JButton();
+        jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jLabel1.setFont(new java.awt.Font("Bookman Old Style", 1, 24)); // NOI18N
-        jLabel1.setText("Selamat datang di Klinik Hewan PT. Kurnia daya Sejahtera");
+        jLabel1.setText("Terima Kasih Sudah Menggunakan Layanan kami");
 
-        jButton2.setFont(new java.awt.Font("Bookman Old Style", 0, 14)); // NOI18N
-        jButton2.setText("Mulai");
-        jButton2.addActionListener(this::jButton2ActionPerformed);
+        jButton1.setText("Tutup");
+        jButton1.addActionListener(this::jButton1ActionPerformed);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap(57, Short.MAX_VALUE)
-                .addComponent(jLabel1)
-                .addGap(37, 37, 37))
-            .addGroup(layout.createSequentialGroup()
-                .addGap(378, 378, 378)
-                .addComponent(jButton2)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(40, 40, 40)
+                        .addComponent(jLabel1))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(293, 293, 293)
+                        .addComponent(jButton1)))
+                .addContainerGap(42, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(114, 114, 114)
+                .addGap(134, 134, 134)
                 .addComponent(jLabel1)
                 .addGap(18, 18, 18)
-                .addComponent(jButton2)
-                .addContainerGap(115, Short.MAX_VALUE))
+                .addComponent(jButton1)
+                .addContainerGap(110, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        FormLogin FL = new FormLogin();
-         FL.setVisible(true);
-         this.dispose();
-    }//GEN-LAST:event_jButton2ActionPerformed
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        this.dispose();
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -94,11 +92,11 @@ public class palingawal extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> new palingawal().setVisible(true));
+        java.awt.EventQueue.invokeLater(() -> new TerimaKasih().setVisible(true));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     // End of variables declaration//GEN-END:variables
 }

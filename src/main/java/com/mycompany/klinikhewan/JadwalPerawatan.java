@@ -97,7 +97,7 @@ public class JadwalPerawatan extends javax.swing.JFrame {
         jComboBox1 = new javax.swing.JComboBox<>();
         jDayChooser1 = new com.toedter.calendar.JDayChooser();
         jLabel3 = new javax.swing.JLabel();
-        lblStatus = new javax.swing.JTextField();
+        lblStatus = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -117,7 +117,7 @@ public class JadwalPerawatan extends javax.swing.JFrame {
 
         jLabel3.setText("Tanggal:");
 
-        lblStatus.addActionListener(this::lblStatusActionPerformed);
+        lblStatus.setText("apakah tersedia?");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -143,7 +143,7 @@ public class JadwalPerawatan extends javax.swing.JFrame {
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(lblStatus, javax.swing.GroupLayout.PREFERRED_SIZE, 232, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addComponent(lblStatus)))
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel3)
@@ -163,7 +163,7 @@ public class JadwalPerawatan extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblStatus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(lblStatus))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 77, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton1)
@@ -236,10 +236,6 @@ public class JadwalPerawatan extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(() -> new JadwalPerawatan().setVisible(true));
     }//GEN-LAST:event_jButton1ActionPerformed
 
-    private void lblStatusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_lblStatusActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_lblStatusActionPerformed
-
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
@@ -249,6 +245,6 @@ public class JadwalPerawatan extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JTextField lblStatus;
+    private javax.swing.JLabel lblStatus;
     // End of variables declaration//GEN-END:variables
 }

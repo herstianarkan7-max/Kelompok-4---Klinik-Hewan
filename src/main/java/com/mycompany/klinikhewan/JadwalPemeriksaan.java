@@ -108,10 +108,10 @@ public class JadwalPemeriksaan extends javax.swing.JFrame {
 
         jLabel4.setText("Dokter");
 
-        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Andi", "Siska" }));
+        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Pilih Dokter", "Arkan", "Herstian" }));
         jComboBox2.addActionListener(this::jComboBox2ActionPerformed);
 
-        lblStatus.setText("jLabel5");
+        lblStatus.setText("valid/invalid");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -142,12 +142,9 @@ public class JadwalPemeriksaan extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(jButton1)
-                        .addGap(54, 54, 54))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(lblStatus)
-                        .addGap(72, 72, 72))))
+                    .addComponent(lblStatus)
+                    .addComponent(jButton1))
+                .addGap(54, 54, 54))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)

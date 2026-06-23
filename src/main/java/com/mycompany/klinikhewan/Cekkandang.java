@@ -6,6 +6,9 @@ package com.mycompany.klinikhewan;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import javax.swing.JOptionPane;
+import java.sql.ResultSet;
+import java.text.SimpleDateFormat;
+import javax.swing.table.DefaultTableModel;
 /**
  *
  * @author Nafisah
@@ -24,7 +27,69 @@ public class Cekkandang extends javax.swing.JFrame {
      */
     public Cekkandang() {
         initComponents();
+        cekKetersediaanKandang();
     }
+    public void cekKetersediaanKandang() {
+    // 1. Membuat kerangka model tabel baru
+    DefaultTableModel model = new DefaultTableModel();
+    model.addColumn("Nomor Kandang");
+    model.addColumn("Status");
+
+    // Daftar nama kandang sesuai dengan tampilan di desain visual (KDG01 - KDG05)
+    String[] daftarKandang = {"KDG01", "KDG02", "KDG03", "KDG04", "KDG05"};
+
+    // 2. Validasi: Jika salah satu tanggal belum diisi, tampilkan status kosong dulu
+    if (jDateChooser1.getDate() == null || jDateChooser2.getDate() == null) {
+        for (String kandang : daftarKandang) {
+            model.addRow(new Object[]{kandang, "Silakan pilih tanggal"});
+        }
+        jTable1.setModel(model); // Ganti jTable1 dengan nama variabel tabel kandangmu
+        return;
+    }
+
+    try {
+        // 3. Format kedua tanggal pilihan dari JDateChooser
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        String tglMulaiPilihan = sdf.format(jDateChooser1.getDate()); // Kalender pertama (dari)
+        String tglSelesaiPilihan = sdf.format(jDateChooser2.getDate()); // Kalender kedua (sampai)
+
+        Connection conn = testkoneksi.getKoneksi();
+
+        // 4. Lakukan perulangan (loop) untuk memeriksa status tiap kandang di database
+        for (String kandang : daftarKandang) {
+            
+            // Query SQL dengan rumus overlap rentang tanggal
+            String sql = "SELECT COUNT(*) FROM tb_penitipan WHERE nomor_kandang = ? " +
+                         "AND tanggal_masuk <= ? AND tanggal_keluar >= ?";
+            
+            PreparedStatement pst = conn.prepareStatement(sql);
+            pst.setString(1, kandang);
+            pst.setString(2, tglSelesaiPilihan); // Mengisi batas tanggal_masuk <= selesai
+            pst.setString(3, tglMulaiPilihan);   // Mengisi batas tanggal_keluar >= mulai
+
+            ResultSet rs = pst.executeQuery();
+            
+            String status = "VALID / Kosong"; // Default jika tidak ditemukan bentrokan
+            
+            if (rs.next()) {
+                int jumlahBookingBentrokan = rs.getInt(1);
+                // Jika jumlahnya lebih dari 0, berarti tanggal tersebut sudah dipesan orang lain
+                if (jumlahBookingBentrokan > 0) {
+                    status = "INVALID / Sudah Dibooking";
+                }
+            }
+
+            // Masukkan hasil pemeriksaan ke baris tabel
+            model.addRow(new Object[]{kandang, status});
+        }
+
+        // 5. Perbarui tampilan tabel dengan data status yang baru
+        jTable1.setModel(model); // Ganti jTable1 dengan nama variabel tabel kandangmu
+
+    } catch (Exception e) {
+        System.out.println("Error cek ketersediaan kandang: " + e.getMessage());
+    }
+}
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -68,6 +133,10 @@ public class Cekkandang extends javax.swing.JFrame {
 
         jButton2.setText("Back");
         jButton2.addActionListener(this::jButton2ActionPerformed);
+
+        jDateChooser1.addPropertyChangeListener(this::jDateChooser1PropertyChange);
+
+        jDateChooser2.addPropertyChangeListener(this::jDateChooser2PropertyChange);
 
         jLabel2.setText("sampai");
 
@@ -126,6 +195,14 @@ public class Cekkandang extends javax.swing.JFrame {
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jDateChooser1PropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_jDateChooser1PropertyChange
+       cekKetersediaanKandang();
+    }//GEN-LAST:event_jDateChooser1PropertyChange
+
+    private void jDateChooser2PropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_jDateChooser2PropertyChange
+        cekKetersediaanKandang();
+    }//GEN-LAST:event_jDateChooser2PropertyChange
 
     /**
      * @param args the command line arguments
