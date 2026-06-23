@@ -38,11 +38,11 @@ public class palingawal extends javax.swing.JFrame {
         jLabel1.setText("Selamat Datang di Klinik Hewan PT. Kurnia Daya Sejahtera");
 
         jButton2.setFont(new java.awt.Font("Bookman Old Style", 0, 14)); // NOI18N
-        jButton2.setText("Admin");
+        jButton2.setText("Customer");
         jButton2.addActionListener(this::jButton2ActionPerformed);
 
         jButton3.setFont(new java.awt.Font("Bookman Old Style", 0, 14)); // NOI18N
-        jButton3.setText("Customer");
+        jButton3.setText("Admin");
         jButton3.addActionListener(this::jButton3ActionPerformed);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -55,9 +55,9 @@ public class palingawal extends javax.swing.JFrame {
                         .addContainerGap(79, Short.MAX_VALUE)
                         .addComponent(jLabel1))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(309, 309, 309)
+                        .addGap(299, 299, 299)
                         .addComponent(jButton2)
-                        .addGap(86, 86, 86)
+                        .addGap(74, 74, 74)
                         .addComponent(jButton3)
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addGap(37, 37, 37))
@@ -84,7 +84,9 @@ public class palingawal extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        // TODO add your handling code here:
+       LoginAdmin LA =new LoginAdmin();
+       LA.setVisible(true);
+       this.dispose();
     }//GEN-LAST:event_jButton3ActionPerformed
 
     /**
