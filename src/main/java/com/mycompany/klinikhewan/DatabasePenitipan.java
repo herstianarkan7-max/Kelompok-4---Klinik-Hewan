@@ -28,11 +28,11 @@ public class DatabasePenitipan extends javax.swing.JFrame {
         try {
             Connection conn = testkoneksi.getKoneksi();
 
-            String sql = "SELECT p.nama, h.nama_hewan, pn.tanggal_masuk, pn.tanggal_keluar, pn.nomor_kandang " +
-                        "FROM tb_pemeriksaan pn " +
-                        "JOIN tb_hewan h ON pn.id_hewan = h.id_hewan " +
+            String sql = "SELECT p.nama, h.nama_hewan, pt.tanggal_masuk, pt.tanggal_keluar, pt.nomor_kandang " +
+                        "FROM tb_pemeriksaan pt " +
+                        "JOIN tb_hewan h ON pt.id_hewan = h.id_hewan " +
                         "JOIN tb_pemilik p ON h.id_pemilik = p.id_pemilik " +
-                        "ORDER BY pn.tanggal DESC, pn.jam DESC";
+                        "ORDER BY pt.tanggal DESC, pt.jam DESC";
                      
             Statement st = conn.createStatement();
             ResultSet rs = st.executeQuery(sql);

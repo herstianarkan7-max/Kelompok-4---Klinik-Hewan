@@ -39,7 +39,7 @@ public class DatabasePerawatan extends javax.swing.JFrame {
                 model.addRow(new Object[]{
                     rs.getString("nama"),
                     rs.getString("nama_hewan"),
-                    rs.getString("layanan"),
+                    rs.getString("jenis_perawatan"),
                     rs.getString("tanggal"),
                     rs.getString("jam")
                 });
