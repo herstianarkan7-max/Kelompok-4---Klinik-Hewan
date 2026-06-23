@@ -20,20 +20,16 @@ public class testkoneksi {
                 String password = "";
                 
                 koneksi = DriverManager.getConnection(url, user, password);
-                
-                // Pesan ini akan muncul jika koneksi sukses
+
                 System.out.println("Koneksi ke Database Berhasil!"); 
                 
-            } catch (SQLException e) { // Ini pasangan dari 'try' di atas
+            } catch (SQLException e) {
                 System.out.println("Koneksi Gagal: " + e.getMessage());
             }
         }
-        return koneksi; // Mengembalikan nilai koneksinya
+        return koneksi;
     }
-    
-    // --- TAMBAHKAN BLOK INI AGAR FILE BISA DI-RUN ---
     public static void main(String[] args) {
-        getKoneksi(); // Memanggil fungsi di atas untuk dites
+        getKoneksi();
     }
-    // ------------------------------------------------
 }

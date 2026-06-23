@@ -103,32 +103,24 @@ public class LoginAdmin extends javax.swing.JFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         try {
             java.sql.Connection conn = testkoneksi.getKoneksi();
-    
-    // Perintah SQL untuk mencocokkan username dan password
+
             String sql = "SELECT * FROM tb_admin WHERE username = ? AND password = ?";
             java.sql.PreparedStatement pst = conn.prepareStatement(sql);
-    
-    // Ambil teks dari kotak isian di layar
+
             pst.setString(1, txtUsername.getText()); 
-    
-    // Jika kamu pakai JPasswordField, gunakan String.valueOf(txtPassword.getPassword())
-    // Jika pakai JTextField biasa, gunakan txtPassword.getText()
             pst.setString(2, txtPassword.getText()); 
     
             java.sql.ResultSet rs = pst.executeQuery();
-    
-    // Jika data ditemukan di database
+
             if (rs.next()) {
                 String namaAdmin = rs.getString("nama_lengkap");
                 javax.swing.JOptionPane.showMessageDialog(null, "Login Berhasil! Selamat bekerja, " + namaAdmin);
-        
-        // Buka form Menu Admin setelah sukses login
+
                 MenuAdmin menu = new MenuAdmin(); 
                 menu.setVisible(true);
-                this.dispose(); // Tutup form login ini
+                this.dispose();
         
             } else {
-        // Jika username atau password salah
                 javax.swing.JOptionPane.showMessageDialog(null, "Username atau Password salah!", "Login Gagal", javax.swing.JOptionPane.ERROR_MESSAGE);
             }
     

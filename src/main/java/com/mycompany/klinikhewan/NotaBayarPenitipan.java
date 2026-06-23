@@ -39,17 +39,15 @@ public void muatDataNotaAkhir() {
             txtTanggalMasuk.setText(rs.getString("tanggal_masuk"));
             txtTanggalKeluar.setText(rs.getString("tanggal_keluar"));
             txtJenisLayanan.setText("Penitipan Kandang: " + rs.getString("nomor_kandang"));
-            
-            // LOGIKA HITUNG SELISIH HARI OTOMATIS
+
             java.sql.Date tglMasuk = rs.getDate("tanggal_masuk");
             java.sql.Date tglKeluar = rs.getDate("tanggal_keluar");
             
             long selisihMilidetik = Math.abs(tglKeluar.getTime() - tglMasuk.getTime());
             long jumlahHari = java.util.concurrent.TimeUnit.DAYS.convert(selisihMilidetik, java.util.concurrent.TimeUnit.MILLISECONDS);
             
-            if (jumlahHari == 0) { jumlahHari = 1; } // Jaga-jaga jika keluar di hari yang sama, dihitung 1 hari
-            
-            // Hitung total (Misal tarif kandang per hari Rp 50.000)
+            if (jumlahHari == 0) { jumlahHari = 1; }
+
             int tarifPerHari = 50000;
             int totalBiaya = (int) jumlahHari * tarifPerHari;
             

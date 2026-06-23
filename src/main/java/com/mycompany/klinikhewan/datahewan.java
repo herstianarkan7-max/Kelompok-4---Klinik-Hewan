@@ -135,7 +135,7 @@ public class datahewan extends javax.swing.JFrame {
     
     PilihJenisLayanan pjl = new PilihJenisLayanan();
         pjl.tangkapIdHewan(idHewanTerbaru);
-        pjl.setVisible(true);
+//        pjl.setVisible(true);
             this.dispose();
 } catch (Exception e) {
   
