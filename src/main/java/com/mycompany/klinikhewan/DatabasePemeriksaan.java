@@ -3,7 +3,10 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package com.mycompany.klinikhewan;
-
+import java.sql.Connection;
+import java.sql.Statement;
+import java.sql.ResultSet;
+import javax.swing.table.DefaultTableModel;
 /**
  *
  * @author Nafisah
@@ -12,11 +15,48 @@ public class DatabasePemeriksaan extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(DatabasePemeriksaan.class.getName());
 
+    public void tampilkanDataPemeriksaan() {
+        DefaultTableModel model = new DefaultTableModel();
+        model.addColumn("Pemilik");
+        model.addColumn("Nama Hewan");
+        model.addColumn("Tanggal");
+        model.addColumn("Jam");
+        model.addColumn("Dokter");
+        
+        try {
+            Connection conn = testkoneksi.getKoneksi();
+
+            String sql = "SELECT p.nama, h.nama_hewan, pm.tanggal, pm.jam, pm.dokter " +
+                        "FROM tb_pemeriksaan pm " +
+                        "JOIN tb_hewan h ON pm.id_hewan = h.id_hewan " +
+                        "JOIN tb_pemilik p ON h.id_pemilik = p.id_pemilik " +
+                        "ORDER BY pm.tanggal DESC, pm.jam DESC";
+                     
+            Statement st = conn.createStatement();
+            ResultSet rs = st.executeQuery(sql);
+
+            while (rs.next()) {
+                model.addRow(new Object[]{
+                    rs.getString("nama"),
+                    rs.getString("nama_hewan"),
+                    rs.getString("tanggal"),
+                    rs.getString("jam"),
+                    rs.getString("dokter")
+                });
+            }
+
+            jTable1.setModel(model); 
+
+        } catch (Exception e) {
+            System.out.println("Gagal memuat database pemeriksaan: " + e.getMessage());
+        }
+    }
     /**
      * Creates new form DatabasePemeriksaan
      */
     public DatabasePemeriksaan() {
         initComponents();
+        tampilkanDataPemeriksaan();
     }
 
     /**
@@ -52,28 +92,30 @@ public class DatabasePemeriksaan extends javax.swing.JFrame {
         jScrollPane1.setViewportView(jTable1);
 
         jButton1.setText("Back");
+        jButton1.addActionListener(this::jButton1ActionPerformed);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap(86, Short.MAX_VALUE)
-                .addComponent(jLabel1)
-                .addGap(86, 86, 86))
-            .addGroup(layout.createSequentialGroup()
-                .addGap(14, 14, 14)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jButton1)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 412, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(14, 14, 14)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jButton1)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 412, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(83, 83, 83)
+                        .addComponent(jLabel1)))
+                .addContainerGap(13, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(29, 29, 29)
+                .addGap(17, 17, 17)
                 .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 241, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jButton1)
@@ -82,6 +124,12 @@ public class DatabasePemeriksaan extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        KelolaDaataAdmin KDA = new KelolaDaataAdmin();
+        KDA.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments

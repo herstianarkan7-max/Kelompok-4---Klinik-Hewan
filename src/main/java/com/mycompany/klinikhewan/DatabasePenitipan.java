@@ -4,6 +4,11 @@
  */
 package com.mycompany.klinikhewan;
 
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author Nafisah
@@ -12,11 +17,48 @@ public class DatabasePenitipan extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(DatabasePenitipan.class.getName());
 
+    public void tampilkanDataPenitipan() {
+        DefaultTableModel model = new DefaultTableModel();
+        model.addColumn("Pemilik");
+        model.addColumn("Nama Hewan");
+        model.addColumn("Tanggal Masuk");
+        model.addColumn("Tanggal Keluar");
+        model.addColumn("Nomor Kandang");
+        
+        try {
+            Connection conn = testkoneksi.getKoneksi();
+
+            String sql = "SELECT p.nama, h.nama_hewan, pn.tanggal_masuk, pn.tanggal_keluar, pn.nomor_kandang " +
+                        "FROM tb_pemeriksaan pn " +
+                        "JOIN tb_hewan h ON pn.id_hewan = h.id_hewan " +
+                        "JOIN tb_pemilik p ON h.id_pemilik = p.id_pemilik " +
+                        "ORDER BY pn.tanggal DESC, pn.jam DESC";
+                     
+            Statement st = conn.createStatement();
+            ResultSet rs = st.executeQuery(sql);
+
+            while (rs.next()) {
+                model.addRow(new Object[]{
+                    rs.getString("nama"),
+                    rs.getString("nama_hewan"),
+                    rs.getString("tanggal_masuk"),
+                    rs.getString("tanggal_keluar"),
+                    rs.getString("nomor_kandang")
+                });
+            }
+
+            jTable1.setModel(model); 
+
+        } catch (Exception e) {
+            System.out.println("Gagal memuat database penitipan: " + e.getMessage());
+        }
+    }
     /**
      * Creates new form DatabasePenitipan
      */
     public DatabasePenitipan() {
         initComponents();
+        tampilkanDataPenitipan();
     }
 
     /**
@@ -49,6 +91,7 @@ public class DatabasePenitipan extends javax.swing.JFrame {
         jScrollPane1.setViewportView(jTable1);
 
         jButton1.setText("Back");
+        jButton1.addActionListener(this::jButton1ActionPerformed);
 
         jLabel1.setFont(new java.awt.Font("Bookman Old Style", 1, 24)); // NOI18N
         jLabel1.setText("DATA PENITIPAN");
@@ -82,6 +125,12 @@ public class DatabasePenitipan extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        KelolaDaataAdmin KDA = new KelolaDaataAdmin();
+        KDA.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments

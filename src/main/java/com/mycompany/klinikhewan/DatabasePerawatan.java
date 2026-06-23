@@ -3,7 +3,10 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package com.mycompany.klinikhewan;
-
+import java.sql.Connection;
+import java.sql.Statement;
+import java.sql.ResultSet;
+import javax.swing.table.DefaultTableModel;
 /**
  *
  * @author LENOVO
@@ -12,11 +15,48 @@ public class DatabasePerawatan extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(DatabasePerawatan.class.getName());
 
+    public void tampilkanDataPerawatan() {
+        DefaultTableModel model = new DefaultTableModel();
+        model.addColumn("Pemilik");
+        model.addColumn("Nama Hewan");
+        model.addColumn("Perawatan");
+        model.addColumn("Tanggal");
+        model.addColumn("Jam");
+        
+        try {
+            Connection conn = testkoneksi.getKoneksi();
+
+            String sql = "SELECT p.nama, h.nama_hewan, pr.jenis_perawatan, pr.tanggal, pr.jam " +
+                        "FROM tb_perawatan pr " +
+                        "JOIN tb_hewan h ON pr.id_hewan = h.id_hewan " +
+                        "JOIN tb_pemilik p ON h.id_pemilik = p.id_pemilik " +
+                        "ORDER BY pr.tanggal DESC, pr.jam DESC";
+                     
+            Statement st = conn.createStatement();
+            ResultSet rs = st.executeQuery(sql);
+
+            while (rs.next()) {
+                model.addRow(new Object[]{
+                    rs.getString("nama"),
+                    rs.getString("nama_hewan"),
+                    rs.getString("layanan"),
+                    rs.getString("tanggal"),
+                    rs.getString("jam")
+                });
+            }
+
+            jTable1.setModel(model); 
+
+        } catch (Exception e) {
+            System.out.println("Gagal memuat database perawatan: " + e.getMessage());
+        }
+    }
     /**
      * Creates new form DatabasePerawatan
      */
     public DatabasePerawatan() {
         initComponents();
+        tampilkanDataPerawatan();
     }
 
     /**
@@ -52,6 +92,7 @@ public class DatabasePerawatan extends javax.swing.JFrame {
         jScrollPane1.setViewportView(jTable1);
 
         jButton1.setText("Back");
+        jButton1.addActionListener(this::jButton1ActionPerformed);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -64,16 +105,16 @@ public class DatabasePerawatan extends javax.swing.JFrame {
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 411, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(14, 14, 14))
             .addGroup(layout.createSequentialGroup()
-                .addGap(93, 93, 93)
+                .addGap(100, 100, 100)
                 .addComponent(jLabel1)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap(40, Short.MAX_VALUE)
+                .addGap(17, 17, 17)
                 .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 29, Short.MAX_VALUE)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jButton1)
@@ -82,6 +123,12 @@ public class DatabasePerawatan extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        KelolaDaataAdmin KDA = new KelolaDaataAdmin();
+        KDA.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments
