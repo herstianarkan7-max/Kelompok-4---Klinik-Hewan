@@ -14,20 +14,17 @@ public class NotaBayarPerawatan extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(NotaBayarPerawatan.class.getName());
     
+    int idHewanNota;
     int idTransaksiMasuk;
-
-    // 2. Fungsi penangkap dari form Jadwal
     public void tangkapIdPerawatan(int idMasuk) {
         this.idTransaksiMasuk = idMasuk;
         muatDataNota(this.idTransaksiMasuk);
     }
-    // Fungsi untuk menangkap ID dan otomatis mengisi semua kotak di form nota
     public void muatDataNota(int idPerawatan) {
         try {
             java.sql.Connection conn = testkoneksi.getKoneksi();
-            
-            // Perintah SQL JOIN untuk menyedot data dari 3 tabel sekaligus
-            String sql = "SELECT p.nama, h.nama_hewan, r.jenis_perawatan, r.tanggal " +
+
+            String sql = "SELECT h.id_hewan, p.nama, h.nama_hewan, r.jenis_perawatan, r.tanggal " +
                          "FROM tb_perawatan r " +
                          "JOIN tb_hewan h ON r.id_hewan = h.id_hewan " +
                          "JOIN tb_pemilik p ON h.id_pemilik = p.id_pemilik " +
@@ -38,24 +35,22 @@ public class NotaBayarPerawatan extends javax.swing.JFrame {
             java.sql.ResultSet rs = pst.executeQuery();
             
             if (rs.next()) {
-                // 1. Mengisi kotak teks otomatis dari database
+                this.idHewanNota = rs.getInt("id_hewan");
+                
                 txtPelanggan.setText(rs.getString("nama"));
                 txtNamaHewan.setText(rs.getString("nama_hewan"));
                 txtJenisLayanan.setText(rs.getString("jenis_perawatan"));
                 txtTanggal.setText(rs.getString("tanggal"));
-                
-                // 2. Hitung harga otomatis berdasarkan teks layanan yang masuk
+
                 String layanan = rs.getString("jenis_perawatan");
                 int hargaTotal = 0;
-                
-                // Cek isi teks layanan dan jumlahkan harganya
+
                 if (layanan.contains("Basic")) { hargaTotal += 50000; }
                 if (layanan.contains("Clean Care")) { hargaTotal += 75000; }
                 if (layanan.contains("Grooming")) { hargaTotal += 100000; }
                 if (layanan.contains("SPA Pet")) { hargaTotal += 120000; }
                 if (layanan.contains("Complete Treatment")) { hargaTotal += 200000; }
-                
-                // 3. Tampilkan harga ke kotak Biaya dan Total
+
                 txtBiayaLayanan.setText(String.valueOf(hargaTotal));
                 txtTotal.setText(String.valueOf(hargaTotal));
             }
@@ -306,9 +301,26 @@ public class NotaBayarPerawatan extends javax.swing.JFrame {
     }//GEN-LAST:event_txtTotalActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        TerimaKasih TK =new TerimaKasih();
-        TK.setVisible(true);
-        this.dispose();
+        try {
+            java.sql.Connection conn = testkoneksi.getKoneksi();
+
+            String sql = "INSERT INTO tb_pembayaran (id_hewan, jenis_layanan, total_tagihan, status) VALUES (?, ?, ?, ?)";
+            java.sql.PreparedStatement pst = conn.prepareStatement(sql);
+ 
+            pst.setInt(1, this.idHewanNota);                  
+            pst.setString(2, txtJenisLayanan.getText());          // Jenis Layanan (Pemeriksaan - dr. xxx)
+            pst.setInt(3, Integer.parseInt(txtTotal.getText())); // Total Tarif
+            pst.setString(4, "Lunas");                        // Status otomatis Lunas karena nota dicetak
+            
+            pst.executeUpdate();
+
+            TerimaKasih TK = new TerimaKasih();
+            TK.setVisible(true);
+            this.dispose();
+            
+        } catch (Exception e) {
+            javax.swing.JOptionPane.showMessageDialog(null, "Gagal menyimpan riwayat pembayaran: " + e.getMessage());
+        }
     }//GEN-LAST:event_jButton1ActionPerformed
 
     /**

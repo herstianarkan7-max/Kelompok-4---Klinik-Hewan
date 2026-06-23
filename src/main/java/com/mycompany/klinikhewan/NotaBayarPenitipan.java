@@ -14,8 +14,8 @@ public class NotaBayarPenitipan extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(NotaBayarPenitipan.class.getName());
     
+    int idHewanNota;
     int idPenitipanMasuk;
-
 public void tangkapIdPenitipan(int id) {
     this.idPenitipanMasuk = id;
     muatDataNotaAkhir();
@@ -24,7 +24,7 @@ public void tangkapIdPenitipan(int id) {
 public void muatDataNotaAkhir() {
     try {
         java.sql.Connection conn = testkoneksi.getKoneksi();
-        String sql = "SELECT p.nama, h.nama_hewan, pt.tanggal_masuk, pt.tanggal_keluar, pt.nomor_kandang " +
+        String sql = "SELECT h.id_hewan, p.nama, h.nama_hewan, pt.tanggal_masuk, pt.tanggal_keluar, pt.nomor_kandang " +
                      "FROM tb_penitipan pt " +
                      "JOIN tb_hewan h ON pt.id_hewan = h.id_hewan " +
                      "JOIN tb_pemilik p ON h.id_pemilik = p.id_pemilik " +
@@ -34,6 +34,8 @@ public void muatDataNotaAkhir() {
         java.sql.ResultSet rs = pst.executeQuery();
         
         if (rs.next()) {
+            this.idHewanNota = rs.getInt("id_hewan");
+            
             txtPelanggan.setText(rs.getString("nama"));
             txtNamaHewan.setText(rs.getString("nama_hewan"));
             txtTanggalMasuk.setText(rs.getString("tanggal_masuk"));
@@ -308,10 +310,26 @@ public void muatDataNotaAkhir() {
     }//GEN-LAST:event_txtTanggalKeluarActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        TerimaKasih TK =new TerimaKasih();
-        TK.setVisible(true);
-        this.dispose();
-        // TODO add your handling code here:
+        try {
+            java.sql.Connection conn = testkoneksi.getKoneksi();
+
+            String sql = "INSERT INTO tb_pembayaran (id_hewan, jenis_layanan, total_tagihan, status) VALUES (?, ?, ?, ?)";
+            java.sql.PreparedStatement pst = conn.prepareStatement(sql);
+ 
+            pst.setInt(1, this.idHewanNota);                  
+            pst.setString(2, txtJenisLayanan.getText());          // Jenis Layanan (Pemeriksaan - dr. xxx)
+            pst.setInt(3, Integer.parseInt(txtTotal.getText())); // Total Tarif
+            pst.setString(4, "Lunas");                        // Status otomatis Lunas karena nota dicetak
+            
+            pst.executeUpdate();
+
+            TerimaKasih TK = new TerimaKasih();
+            TK.setVisible(true);
+            this.dispose();
+            
+        } catch (Exception e) {
+            javax.swing.JOptionPane.showMessageDialog(null, "Gagal menyimpan riwayat pembayaran: " + e.getMessage());
+        }
     }//GEN-LAST:event_jButton1ActionPerformed
 
     /**

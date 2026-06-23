@@ -14,7 +14,8 @@ public class NotaBayar extends javax.swing.JFrame {
     
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(NotaBayar.class.getName());
-
+    
+    int idHewanNota;
     int idTransaksiMasuk;
     public void tangkapIdPemeriksaan(int idMasuk) {
         this.idTransaksiMasuk = idMasuk;
@@ -25,7 +26,7 @@ public class NotaBayar extends javax.swing.JFrame {
         try {
             java.sql.Connection conn = testkoneksi.getKoneksi();
  
-            String sql = "SELECT p.nama, h.nama_hewan, pm.tanggal, pm.dokter " +
+            String sql = "SELECT h.id_hewan, p.nama, h.nama_hewan, pm.tanggal, pm.dokter " +
                          "FROM tb_pemeriksaan pm " +
                          "JOIN tb_hewan h ON pm.id_hewan = h.id_hewan " +
                          "JOIN tb_pemilik p ON h.id_pemilik = p.id_pemilik " +
@@ -36,6 +37,8 @@ public class NotaBayar extends javax.swing.JFrame {
             java.sql.ResultSet rs = pst.executeQuery();
             
             if (rs.next()) {
+                this.idHewanNota = rs.getInt("id_hewan");
+                
                 jTextField3.setText(rs.getString("nama"));        // Kotak Pelanggan
                 jTextField5.setText(rs.getString("nama_hewan"));  // Kotak Nama Hewan
                 jTextField9.setText(rs.getString("tanggal"));     // Kotak Tgl
@@ -320,9 +323,26 @@ public class NotaBayar extends javax.swing.JFrame {
     }//GEN-LAST:event_jTextField9ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        TerimaKasih TK =new TerimaKasih();
-        TK.setVisible(true);
-        this.dispose();
+        try {
+            java.sql.Connection conn = testkoneksi.getKoneksi();
+
+            String sql = "INSERT INTO tb_pembayaran (id_hewan, jenis_layanan, total_tagihan, status) VALUES (?, ?, ?, ?)";
+            java.sql.PreparedStatement pst = conn.prepareStatement(sql);
+ 
+            pst.setInt(1, this.idHewanNota);                  // ID Hewan yang ditangkap tadi
+            pst.setString(2, jTextField1.getText());          // Jenis Layanan (Pemeriksaan - dr. xxx)
+            pst.setInt(3, Integer.parseInt(jTextField2.getText())); // Total Tarif
+            pst.setString(4, "Lunas");                        // Status otomatis Lunas karena nota dicetak
+            
+            pst.executeUpdate();
+
+            TerimaKasih TK = new TerimaKasih();
+            TK.setVisible(true);
+            this.dispose();
+            
+        } catch (Exception e) {
+            javax.swing.JOptionPane.showMessageDialog(null, "Gagal menyimpan riwayat pembayaran: " + e.getMessage());
+        }
     }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
