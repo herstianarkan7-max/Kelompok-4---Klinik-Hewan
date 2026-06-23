@@ -3,7 +3,10 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package com.mycompany.klinikhewan;
-
+import java.sql.Connection;
+import java.sql.Statement;
+import java.sql.ResultSet;
+import javax.swing.table.DefaultTableModel;
 /**
  *
  * @author Nafisah
@@ -17,6 +20,44 @@ public class CekStatusBayar extends javax.swing.JFrame {
      */
     public CekStatusBayar() {
         initComponents();
+        tampilkanDataBayar();
+    }
+    public void tampilkanDataBayar() {
+
+    DefaultTableModel model = new DefaultTableModel();
+    model.addColumn("Nama Pelanggan");
+    model.addColumn("Nama Hewan");
+    model.addColumn("Jenis Layanan");
+    model.addColumn("Total Tagihan");
+    model.addColumn("Status Pembayaran");
+
+    try {
+        Connection conn = testkoneksi.getKoneksi();
+       
+        String sql = "SELECT p.nama, h.nama_hewan, b.jenis_layanan, b.total_tagihan, b.status " +
+                     "FROM tb_pembayaran b " +
+                     "JOIN tb_hewan h ON b.id_hewan = h.id_hewan " +
+                     "JOIN tb_pemilik p ON h.id_pemilik = p.id_pemilik " +
+                     "ORDER BY b.id_pembayaran DESC"; // Urutkan dari yang terbaru
+                     
+        Statement st = conn.createStatement();
+        ResultSet rs = st.executeQuery(sql);
+
+        while (rs.next()) {
+            model.addRow(new Object[]{
+                rs.getString("nama"),
+                rs.getString("nama_hewan"),
+                rs.getString("jenis_layanan"),
+                "Rp " + rs.getString("total_tagihan"), // Tambahkan tulisan Rp agar rapi
+                rs.getString("status")
+            });
+        }
+
+        jTable1.setModel(model); 
+
+        } catch (Exception e) {
+            System.out.println("Gagal memuat status bayar: " + e.getMessage());
+        }
     }
 
     /**
@@ -85,7 +126,9 @@ public class CekStatusBayar extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
+        MenuAdmin MA = new MenuAdmin();
+        MA.setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
 
     /**

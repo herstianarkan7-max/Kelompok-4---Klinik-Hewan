@@ -16,18 +16,15 @@ public class NotaBayar extends javax.swing.JFrame {
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(NotaBayar.class.getName());
 
     int idTransaksiMasuk;
-    // 2. Fungsi untuk menangkap lemparan ID
     public void tangkapIdPemeriksaan(int idMasuk) {
         this.idTransaksiMasuk = idMasuk;
         muatDataNota(this.idTransaksiMasuk);
     }
 
-    // 3. TAMBAHKAN FUNGSI INI UNTUK MENYEDOT DATA DATABASE KE NOTA
     public void muatDataNota(int idPeriksa) {
         try {
             java.sql.Connection conn = testkoneksi.getKoneksi();
-            
-            // Query JOIN khusus untuk menarik data pemeriksaan dokter
+ 
             String sql = "SELECT p.nama, h.nama_hewan, pm.tanggal, pm.dokter " +
                          "FROM tb_pemeriksaan pm " +
                          "JOIN tb_hewan h ON pm.id_hewan = h.id_hewan " +
@@ -39,26 +36,24 @@ public class NotaBayar extends javax.swing.JFrame {
             java.sql.ResultSet rs = pst.executeQuery();
             
             if (rs.next()) {
-                // Distribusikan hasil database ke masing-masing jTextField
                 jTextField3.setText(rs.getString("nama"));        // Kotak Pelanggan
                 jTextField5.setText(rs.getString("nama_hewan"));  // Kotak Nama Hewan
                 jTextField9.setText(rs.getString("tanggal"));     // Kotak Tgl
                 
                 String dokter = rs.getString("dokter");
                 jTextField1.setText("Pemeriksaan - " + dokter);   // Kotak Jenis Layanan
-                
-                // Logika penentuan harga berdasarkan nama dokter
+
                 int tarif = 0;
                 if (dokter.contains("Arkan")) {
                     tarif = 100000;
                 } else if (dokter.contains("Herstian")) {
                     tarif = 150000;
                 } else {
-                    tarif = 100000; // Harga standar
+                    tarif = 100000;
                 }
                 
-                jTextField2.setText(String.valueOf(tarif)); // Kotak Biaya Layanan
-                jTextField8.setText(String.valueOf(tarif)); // Kotak Total
+                jTextField2.setText(String.valueOf(tarif));
+                jTextField8.setText(String.valueOf(tarif));
             } else {
                 JOptionPane.showMessageDialog(null, "Data transaksi tidak ditemukan!");
             }
