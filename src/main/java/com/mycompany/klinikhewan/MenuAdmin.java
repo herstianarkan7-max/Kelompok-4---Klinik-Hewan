@@ -38,6 +38,7 @@ public class MenuAdmin extends javax.swing.JFrame {
         jLabel1.setText("Pilih Menu");
 
         jButton1.setText("Kelola Data");
+        jButton1.addActionListener(this::jButton1ActionPerformed);
 
         jButton2.setText("Cek Status Bayar");
         jButton2.addActionListener(this::jButton2ActionPerformed);
@@ -77,6 +78,12 @@ public class MenuAdmin extends javax.swing.JFrame {
        CSB.setVisible(true);
        this.dispose();
     }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        KelolaDaataAdmin KDA = new KelolaDaataAdmin();
+        KDA.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments
