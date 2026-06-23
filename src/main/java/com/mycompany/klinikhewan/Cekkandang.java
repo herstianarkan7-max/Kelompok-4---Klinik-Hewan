@@ -35,10 +35,9 @@ public class Cekkandang extends javax.swing.JFrame {
     model.addColumn("Nomor Kandang");
     model.addColumn("Status");
 
-    // Daftar nama kandang sesuai dengan tampilan di desain visual (KDG01 - KDG05)
     String[] daftarKandang = {"KDG01", "KDG02", "KDG03", "KDG04", "KDG05"};
 
-    // 2. Validasi: Jika salah satu tanggal belum diisi, tampilkan status kosong dulu
+    
     if (jDateChooser1.getDate() == null || jDateChooser2.getDate() == null) {
         for (String kandang : daftarKandang) {
             model.addRow(new Object[]{kandang, "Silakan pilih tanggal"});
